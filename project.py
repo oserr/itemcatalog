@@ -28,17 +28,10 @@ app = Flask(__name__)
 @app.route('/')
 @app.route('/items')
 def index():
-    is_session = False
-    email = request.cookies.get('email')
-    pwdhsh = request.cookies.get('secret')
-    if email and pwdhsh:
-        user = session.query(User).get(email)
-        if pwdhsh == user.pwdhsh:
-            is_session = True
     categories = session.query(Category).all()
     items = session.query(Item).all()
-    return render_template('index.html',
-        is_session=is_session, categories=categories, items=items)
+    return render_template('index.html', is_session=get_session_status(),
+        categories=categories, items=items)
 
 
 @app.route('/login', methods=['GET', 'POST'])
