@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # project.py
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import (Flask, render_template,
+                   request, redirect, url_for, flash,
+                   send_from_directory)
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import User, Category, Item, Base
@@ -27,6 +29,15 @@ def index():
     items = session.query(Item).all()
     return render_template('index.html',
         is_session=is_session, categories=categories, items=items)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if get_session_status():
+        return redirect('/')
+    if request.method == 'GET':
+        return send_from_directory('.', 'index.hmtl')
+    return 'not implemented yet'
 
 
 @app.route('/restaurants/<int:restaurant_id>/')
