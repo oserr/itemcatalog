@@ -7,6 +7,16 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import User, Category, Item, Base
 
+
+def get_session_status():
+    email = request.cookies.get('email')
+    pwdhsh = request.cookies.get('secret')
+    if email and pwdhsh:
+        user = session.query(User).get(email)
+        return user and pwdhsh == user.pwdhsh
+    return False
+
+
 engine = create_engine('sqlite:///catalog.db')
 Base.metadata.bind = engine
 
