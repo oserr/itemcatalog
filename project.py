@@ -23,7 +23,7 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 
 @app.route('/')
 @app.route('/items')
@@ -39,7 +39,7 @@ def login():
     if get_session_status():
         return redirect('/')
     if request.method == 'GET':
-        return send_from_directory('.', 'index.hmtl')
+        return send_from_directory('.', 'login.html')
     return 'not implemented yet'
 
 
