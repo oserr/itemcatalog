@@ -22,13 +22,15 @@
       <div class="row">
         <div class="col-md-4">
           <h2>Categories</h2>
-          <p>Snowboarding</p>
-          <p>Karate</p>
+          {% for category in categories %}
+            <p>{{ category.name }}</p>
+          {% endfor %}
         </div>
         <div class="col-md-8">
           <h2>Items</h2>
-          <p>Snowboard</p>
-          <p>Kimono</p>
+          {% for item in items %}
+            <p>{{ item.name }}</p>
+          {% endfor %}
         </div>
       </div>
     </div>
