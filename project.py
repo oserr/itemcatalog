@@ -14,20 +14,19 @@ session = DBSession()
 app = Flask(__name__)
 
 @app.route('/')
-@app.route('/hello')
-def HelloWorld():
-    restaurant = session.query(Restaurant).first()
-    items = session.query(MenuItem).filter_by(restaurant_id = restaurant.id)
-    output = ''
-    for i in items:
-        output += i.name
-        output += '<br>'
-        output += i.price
-        output += '<br>'
-        output += i.description
-        output += '<br>'
-        output += '<br>'
-    return output
+@app.route('/items')
+def index():
+    is_session = False
+    email = request.cookies.get('email')
+    pwdhsh = request.cookies.get('secret')
+    if email and pwdhsh:
+        user = session.query(User).get(email)
+        if pwdhsh == user.pwdhsh:
+            is_session = True
+    categories = session.query(Category).all()
+    items = session.query(Item).all()
+    return render_template('index.html',
+        is_session=is_session, categories=categories, items=items)
 
 
 @app.route('/restaurants/<int:restaurant_id>/')
