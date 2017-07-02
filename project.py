@@ -3,7 +3,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import User, Category, Item
+from models import User, Category, Item, Base
 
 engine = create_engine('sqlite:///catalog.db')
 Base.metadata.bind = engine
