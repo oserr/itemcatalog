@@ -16,8 +16,6 @@ class User(Base):
 class Category(Base):
     __tablename__ = 'category'
     name = Column(String(50), primary_key=True)
-    user_email = Column(String(75), ForeignKey('user.email'))
-    user = relationship(User)
 
 
 class Item(Base):
