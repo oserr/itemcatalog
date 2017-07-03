@@ -32,6 +32,9 @@
         </div>
         <div class="col-md-8">
           <h2>Items</h2>
+          {% if is_session %}
+            <h6><a href="/newitem" role="button">New Item</a></h6>
+          {% endif %}
           {% for item in items %}
             <p>{{ item.name }}</p>
           {% endfor %}
