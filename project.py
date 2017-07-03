@@ -39,7 +39,7 @@ def get_hash(salt, psswd):
     """
     if not salt or not psswd:
         raise ValueError('The salt and password cannot be empty')
-    return hmac.new(salt.encode(), psswd).hexdigest()
+    return hmac.new(salt.encode(), psswd.encode()).hexdigest()
 
 
 def get_session_status(cookie):
