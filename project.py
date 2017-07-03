@@ -123,15 +123,15 @@ def newitem():
     if request.method == 'GET':
         categories = session.query(Category).all()
         return render_template('newitem.html', categories=categories)
-    title = request.form['title']
+    title = request.get('title')
     if not title:
         return 'The item must have a name. Try again.'
-    description = request.form['description']
+    description = request.get('description')
     if not description:
         return 'The item must have a description. Try again.'
-    cat = request.form['category']
+    cat = request.get('category')
     if cat == 'other':
-        cat = request.form['newcategory']
+        cat = request.get('newcategory')
         if not cat:
             return 'New category name must be something. Try again.'
     item = Item(name=title,
