@@ -62,6 +62,12 @@ def index():
         categories=categories, items=items)
 
 
+@app.route('/logout')
+def logout():
+    flask_session.pop('username', None)
+    return redirect('/')
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if get_session_status('username'):
