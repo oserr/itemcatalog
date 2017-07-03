@@ -68,7 +68,21 @@ def login():
         return redirect('/')
     if request.method == 'GET':
         return send_from_directory('html', 'login.html')
-    return 'not implemented yet'
+    username = request.form['user']
+    if not username:
+        return 'The username cannot be empty. Try again.'
+    password = request.form['password']
+    if not password:
+        return 'The password cannot be empty. Try again.'
+    user = session.query(User).get(username)
+    if not user:
+        return 'A user with name {} does not exist. Try again.'.format(username)
+    salt = getsalt()
+    hsh = get_hash(user.salt, password)
+    if hsh != user.pwdhsh:
+        return 'The password is incorrect. Try again.'
+    flask_session['username'] = username
+    return redirect('/')
 
 
 @app.route('/register', methods=['GET', 'POST'])
