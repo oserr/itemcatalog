@@ -43,6 +43,15 @@ def login():
     return 'not implemented yet'
 
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if get_session_status():
+        return redirect('/')
+    if request.method == 'GET':
+        return send_from_directory('html', 'register.html')
+    return 'not implemented yet'
+
+
 @app.route('/restaurants/<int:restaurant_id>/')
 def restaurant_menu(restaurant_id):
     restaurant = session.query(Restaurant).get(restaurant_id)
