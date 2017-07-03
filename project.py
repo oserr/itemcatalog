@@ -41,13 +41,8 @@ def get_hash(salt, psswd):
     return hmac.new(salt.encode(), psswd).hexdigest()
 
 
-def get_session_status():
-    email = request.cookies.get('email')
-    pwdhsh = request.cookies.get('secret')
-    if email and pwdhsh:
-        user = session.query(User).get(email)
-        return user and pwdhsh == user.pwdhsh
-    return False
+def get_session_status(cookie):
+    return cookie in flask_session
 
 
 engine = create_engine('sqlite:///catalog.db')
@@ -63,13 +58,13 @@ app = Flask(__name__, static_url_path='')
 def index():
     categories = session.query(Category).all()
     items = session.query(Item).all()
-    return render_template('index.html', is_session=get_session_status(),
+    return render_template('index.html', is_session=get_session_status('username'),
         categories=categories, items=items)
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if get_session_status():
+    if get_session_status('username'):
         return redirect('/')
     if request.method == 'GET':
         return send_from_directory('html', 'login.html')
@@ -78,7 +73,7 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if get_session_status():
+    if get_session_status('username'):
         return redirect('/')
     if request.method == 'GET':
         return send_from_directory('html', 'register.html')
