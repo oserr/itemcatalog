@@ -83,7 +83,7 @@ def login():
     user = session.query(User).get(username)
     if not user:
         return 'A user with name {} does not exist. Try again.'.format(username)
-    salt = getsalt()
+    salt = gensalt()
     hsh = get_hash(user.salt, password)
     if hsh != user.pwdhsh:
         return 'The password is incorrect. Try again.'
@@ -106,7 +106,7 @@ def register():
     user = session.query(User).get(username)
     if user:
         return 'The username is already taken. Try again.'
-    salt = getsalt()
+    salt = gensalt()
     hsh = get_hash(salt, password)
     user = User(email=username, salt=salt, pwdhsh=hsh)
     session.add(user)
