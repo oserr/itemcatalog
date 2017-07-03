@@ -116,6 +116,33 @@ def register():
     return redirect('/')
 
 
+@app.route('/newitem', methods=['GET', 'POST'])
+def newitem():
+    if not get_session_status('username'):
+        return 'You need to log in to create an item.'
+    if request.method == 'GET':
+        categories = session.query(Category).all()
+        return render_template('newitem.html', categories=categories)
+    title = request.form['title']
+    if not title:
+        return 'The item must have a name. Try again.'
+    description = request.form['description']
+    if not description:
+        return 'The item must have a description. Try again.'
+    cat = request.form['category']
+    if cat == 'other':
+        cat = request.form['newcategory']
+        if not cat:
+            return 'New category name must be something. Try again.'
+    item = Item(name=title,
+        description=description,
+        category_name=cat,
+        user_email=flask_session['username'])
+    session.add(item)
+    session.commit()
+    return redirect('/')
+
+
 @app.route('/restaurants/<int:restaurant_id>/')
 def restaurant_menu(restaurant_id):
     restaurant = session.query(Restaurant).get(restaurant_id)
