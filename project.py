@@ -39,7 +39,7 @@ def login():
     if get_session_status():
         return redirect('/')
     if request.method == 'GET':
-        return send_from_directory('.', 'login.html')
+        return send_from_directory('html', 'login.html')
     return 'not implemented yet'
 
 
