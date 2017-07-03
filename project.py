@@ -134,11 +134,12 @@ def newitem():
         cat = request.get('newcategory')
         if not cat:
             return 'New category name must be something. Try again.'
-    else:
-        found=False
         for category in categories:
             if category.name.lower() == cat.lower():
-                found = True
+                return 'Category {} already exist. Try again.'.format(cat)
+    else:
+        for category in categories:
+            if category.name.lower() == cat.lower():
                 break
         else:
             return 'Category {} does not exist. Try again.'.format(cat)
