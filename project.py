@@ -120,8 +120,8 @@ def register():
 def newitem():
     if not get_session_status('username'):
         return 'You need to log in to create an item.'
+    categories = session.query(Category).all()
     if request.method == 'GET':
-        categories = session.query(Category).all()
         return render_template('newitem.html', categories=categories)
     title = request.get('title')
     if not title:
@@ -134,6 +134,14 @@ def newitem():
         cat = request.get('newcategory')
         if not cat:
             return 'New category name must be something. Try again.'
+    else:
+        found=False
+        for category in categories:
+            if category.name.lower() == cat.lower():
+                found = True
+                break
+        else:
+            return 'Category {} does not exist. Try again.'.format(cat)
     item = Item(name=title,
         description=description,
         category_name=cat,
