@@ -5,6 +5,7 @@ import string
 from flask import (Flask, render_template,
                    request, redirect, url_for, flash,
                    send_from_directory)
+from flask import session as flask_session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import User, Category, Item, Base
@@ -81,7 +82,22 @@ def register():
         return redirect('/')
     if request.method == 'GET':
         return send_from_directory('html', 'register.html')
-    return 'not implemented yet'
+    username = request.form['user']
+    if not username:
+        return 'The username cannot be empty. Try again.'
+    password = request.form['password']
+    if not password:
+        return 'The password cannot be empty. Try again.'
+    user = session.query(User).get(username)
+    if user:
+        return 'The username is already taken. Try again.'
+    salt = getsalt()
+    hsh = get_hash(salt, password)
+    user = User(email=username, salt=salt, pwdhsh=hsh)
+    session.add(user)
+    session.commit()
+    flask_session['username'] = username
+    return redirect('/')
 
 
 @app.route('/restaurants/<int:restaurant_id>/')
