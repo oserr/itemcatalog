@@ -148,6 +148,9 @@ def newitem():
         category = session.query(Category).get(cat)
         if not category:
             return 'Category {} does not exist. Try again.'.format(cat)
+        item = session.query(Item).get(title)
+        if item and category == category:
+            return 'Item {} already exists for category {}. Try again.'.format(title, category.name)
     user = session.query(User).get(flask_session['username'])
     item = Item(name=title,
         description=description,
