@@ -14,7 +14,7 @@
     <header class="jumbotron">
       <h1>ItemCatalog</h1>
       <p class="login-buttons">
-      {% if is_session %}
+      {% if email %}
         <a class="btn btn-default" href="/logout" role="button">Logout</a>
       {% else %}
         <a class="btn btn-default" href="/login" role="button">Login</a>
@@ -32,11 +32,11 @@
         </div>
         <div class="col-md-8">
           <h2>Items</h2>
-          {% if is_session %}
+          {% if email %}
             <h6><a href="/newitem" role="button">New Item</a></h6>
           {% endif %}
           {% for item in items %}
-            <p>{{ item.name }}</p>
+            <p><a href="/item/{{ item.id }}">{{ item.name }}</a></p>
           {% endfor %}
         </div>
       </div>
