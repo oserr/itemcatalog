@@ -177,6 +177,23 @@ def getitem(item_id):
         email=get_session_email('username'), item=item)
 
 
+@app.route('/item/<int:item_id>/edit', methods=['GET', 'POST'])
+def edit_item(item_id):
+    email = get_session_email('username')
+    if not email:
+        return 'Must be logged in to edit an item'
+    item = session.query(Item).get(item_id)
+    if not item:
+        return 'Item not found. Try again.'
+    user = session.query(User).get(email)
+    if not user:
+        return 'Must create account to be able to edit items.'
+    if item.user != user:
+        return 'To edit, user must own item'
+    if method == 'GET':
+        return render_template('newitem.html', item)
+
+
 @app.route('/restaurants/<int:restaurant_id>/')
 def restaurant_menu(restaurant_id):
     restaurant = session.query(Restaurant).get(restaurant_id)
