@@ -42,7 +42,7 @@ def get_hash(salt, psswd):
     return hmac.new(salt.encode(), psswd.encode()).hexdigest()
 
 
-def get_session_status(cookie):
+def get_session_email(cookie):
     return flask_session.get(cookie)
 
 
@@ -60,7 +60,7 @@ def index():
     categories = session.query(Category).all()
     items = session.query(Item).all()
     return render_template('index.html',
-        is_session=get_session_status('username'),
+        is_session=get_session_email('username'),
         categories=categories, items=items)
 
 
@@ -72,7 +72,7 @@ def logout():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if get_session_status('username'):
+    if get_session_email('username'):
         return redirect('/')
     if request.method == 'GET':
         return send_from_directory('html', 'login.html')
@@ -96,7 +96,7 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if get_session_status('username'):
+    if get_session_email('username'):
         return redirect('/')
     if request.method == 'GET':
         return send_from_directory('html', 'register.html')
@@ -120,7 +120,7 @@ def register():
 
 @app.route('/newitem', methods=['GET', 'POST'])
 def newitem():
-    if not get_session_status('username'):
+    if not get_session_email('username'):
         return 'You need to log in to create an item.'
     categories = session.query(Category).all()
     if request.method == 'GET':
