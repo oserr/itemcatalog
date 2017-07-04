@@ -138,17 +138,17 @@ def newitem():
         cat = cat.lower()
         if cat == 'other':
             return 'New catogory name cannot be other. Try again.'
-        category = session.query(Category).get(cat)
+        category = session.query(Category).filter(Category.name == cat).first()
         if category:
             return 'Category {} already exist. Try again.'.format(cat)
         category = Category(name=cat)
         session.add(category)
         session.commit()
     else:
-        category = session.query(Category).get(cat)
+        category = session.query(Category).filter(Category.name == cat).first()
         if not category:
             return 'Category {} does not exist. Try again.'.format(cat)
-        item = session.query(Item).get(title)
+        item = session.query(Item).filter(Item.name == title).first()
         if item and category == category:
             return 'Item {} already exists for category {}. Try again.'.format(title, category.name)
     user = session.query(User).get(flask_session['username'])
