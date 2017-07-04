@@ -190,8 +190,11 @@ def edit_item(item_id):
         return 'Must create account to be able to edit items.'
     if item.user != user:
         return 'To edit, user must own item'
-    if method == 'GET':
-        return render_template('newitem.html', item)
+    if request.method == 'GET':
+        categories = (session.query(Category)
+            .filter(Category.name != item.category_name).all())
+        return render_template('newitem.html',
+            item=item, categories=categories, email=email)
 
 
 @app.route('/restaurants/<int:restaurant_id>/')
