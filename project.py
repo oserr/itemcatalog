@@ -43,7 +43,7 @@ def get_hash(salt, psswd):
 
 
 def get_session_status(cookie):
-    return cookie in flask_session
+    return flask_session.get(cookie)
 
 
 engine = create_engine('sqlite:///catalog.db')
