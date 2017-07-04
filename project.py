@@ -173,11 +173,8 @@ def getitem(item_id):
     item = session.query(Item).get(item_id)
     if not item:
         return 'Item not found. Try again.'
-    out = ''
-    out += item.name + '\n'
-    out += item.description + '\n'
-    out += item.category_name
-    return out
+    return render_template('item.html',
+        email=get_session_email('username'), item=item)
 
 
 @app.route('/restaurants/<int:restaurant_id>/')
