@@ -29,9 +29,7 @@
           {% endfor %}
           <option value="other">other</option>
         </select>
-        {% if not categories|length %}
         <input type="text" class="form-control input-lg" name="newcategory" placeholder="New category">
-        {% endif %}
         <button type="submit" class="btn btn-default pull-right">Submit</button>
       </div>
     </form>
