@@ -18,12 +18,23 @@
       </p>
     </header>
     <div class="container">
+    {% if item %}
+    <form class="row" method="post" action="/item/{{ item.id }}/edit">
+    {% else %}
     <form class="row" method="post" action="/newitem">
+    {% endif %}
       <div class="col-md-8 col-centered">
+        {% if item %}
+        <h3>Edit the item</h3>
+        {% else %}
         <h3>Create a new item!</h3>
-        <input type="text" class="form-control input-lg" name="title" placeholder="Title">
-        <textarea class="form-control input-lg comment-input" name="description" placeholder="Description"></textarea>
+        {% endif %}
+        <input type="text" class="form-control input-lg" name="title" placeholder="{{ item.name if item else 'Title' }}">
+        <textarea class="form-control input-lg comment-input" name="description" placeholder="Description">{{ item.description if item }}</textarea>
         <select name="category">
+          {% if item %}
+          <option value="{{ item.category_name }}">{{ item.name }}</option>
+          {% endif %}
           {% for category in categories %}
           <option value="{{ category.name }}">{{ category.name }}</option>
           {% endfor %}
