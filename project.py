@@ -59,7 +59,8 @@ app = Flask(__name__, static_url_path='')
 def index():
     categories = session.query(Category).all()
     items = session.query(Item).all()
-    return render_template('index.html', is_session=get_session_status('username'),
+    return render_template('index.html',
+        is_session=get_session_status('username'),
         categories=categories, items=items)
 
 
@@ -83,7 +84,8 @@ def login():
         return 'The password cannot be empty. Try again.'
     user = session.query(User).get(username)
     if not user:
-        return 'A user with name {} does not exist. Try again.'.format(username)
+        return ('A user with name {} does not exist. Try again.'
+            .format(username))
     salt = gensalt()
     hsh = get_hash(user.salt, password)
     if hsh != user.pwdhsh:
@@ -138,19 +140,22 @@ def newitem():
         cat = cat.lower()
         if cat == 'other':
             return 'New catogory name cannot be other. Try again.'
-        category = session.query(Category).filter(Category.name == cat).first()
+        category = (session.query(Category)
+            .filter(Category.name == cat).first())
         if category:
             return 'Category {} already exist. Try again.'.format(cat)
         category = Category(name=cat)
         session.add(category)
         session.commit()
     else:
-        category = session.query(Category).filter(Category.name == cat).first()
+        category = (session.query(Category)
+            .filter(Category.name == cat).first())
         if not category:
             return 'Category {} does not exist. Try again.'.format(cat)
         item = session.query(Item).filter(Item.name == title).first()
         if item and category == category:
-            return 'Item {} already exists for category {}. Try again.'.format(title, category.name)
+            return ('Item {} already exists for category {}. Try again.'
+                .format(title, category.name))
     user = session.query(User).get(flask_session['username'])
     item = Item(name=title,
         description=description,
