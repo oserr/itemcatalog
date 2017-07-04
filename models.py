@@ -16,12 +16,14 @@ class User(Base):
 
 class Category(Base):
     __tablename__ = 'category'
-    name = Column(String(50), primary_key=True)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), nullable=False)
 
 
 class Item(Base):
     __tablename__ = 'item'
-    name = Column(String(50), primary_key=True)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), nullable=False)
     description = Column(String(400), nullable=False)
     category_name = Column(String(250), ForeignKey('category.name'))
     category = relationship(Category)
