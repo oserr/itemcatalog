@@ -168,6 +168,18 @@ def newitem():
     return redirect('/')
 
 
+@app.route('/item/<int:item_id>')
+def getitem(item_id):
+    item = session.query(Item).get(item_id)
+    if not item:
+        return 'Item not found. Try again.'
+    out = ''
+    out += item.name + '\n'
+    out += item.description + '\n'
+    out += item.category_name
+    return out
+
+
 @app.route('/restaurants/<int:restaurant_id>/')
 def restaurant_menu(restaurant_id):
     restaurant = session.query(Restaurant).get(restaurant_id)
