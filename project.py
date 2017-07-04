@@ -148,7 +148,7 @@ def newitem():
         category = session.query(Category).get(cat)
         if not category:
             return 'Category {} does not exist. Try again.'.format(cat)
-    user = session.search(User).get(flask_sesssion['username'])
+    user = session.query(User).get(flask_session['username'])
     item = Item(name=title,
         description=description,
         category_name=cat,
