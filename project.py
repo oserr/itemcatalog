@@ -60,7 +60,7 @@ def index():
     categories = session.query(Category).all()
     items = session.query(Item).all()
     return render_template('index.html',
-        is_session=get_session_email('username'),
+        email=get_session_email('username'),
         categories=categories, items=items)
 
 
