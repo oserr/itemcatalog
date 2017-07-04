@@ -126,6 +126,7 @@ def newitem():
     title = request.form.get('title')
     if not title:
         return 'The item must have a name. Try again.'
+    title = title.lower()
     description = request.form.get('description')
     if not description:
         return 'The item must have a description. Try again.'
@@ -134,19 +135,26 @@ def newitem():
         cat = request.form.get('newcategory')
         if not cat:
             return 'New category name must be something. Try again.'
-        for category in categories:
-            if category.name.lower() == cat.lower():
-                return 'Category {} already exist. Try again.'.format(cat)
+        cat = cat.lower()
+        if cat == 'other':
+            return 'New catogory name cannot be other. Try again.'
+        category = session.query(Category).get(cat)
+        if category:
+            return 'Category {} already exist. Try again.'.format(cat)
+        category = Category(name=cat)
+        session.add(category)
+        session.commit()
     else:
-        for category in categories:
-            if category.name.lower() == cat.lower():
-                break
-        else:
+        category = session.query(Category).get(cat)
+        if not category:
             return 'Category {} does not exist. Try again.'.format(cat)
+    user = session.search(User).get(flask_sesssion['username'])
     item = Item(name=title,
         description=description,
         category_name=cat,
-        user_email=flask_session['username'])
+        category=category,
+        user_email=user.email,
+        user=user)
     session.add(item)
     session.commit()
     return redirect('/')
