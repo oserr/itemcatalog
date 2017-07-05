@@ -262,9 +262,9 @@ def delete_item(item_id):
     if item.user != user:
         return 'To delete, user must own item'
     if request.method == 'GET':
-        return render_template('someitem.html', item=item)
+        return render_template('item_delete.html', item=item)
     cat = item.category_name
-    session.query(Item).filter(Item.id = item.id).delete()
+    session.query(Item).filter(Item.id == item.id).delete()
     cat_count = session.query(Item).filter(Item.category_name == cat).count()
     if not cat_count:
         session.query(Category) .filter(Category.name == cat).delete()
