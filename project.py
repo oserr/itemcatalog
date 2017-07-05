@@ -250,12 +250,9 @@ def edit_item(item_id):
         item.category = category
         session.add(item)
         session.commit()
-    if is_cat_different:
-        cat_count = (session.query(Item)
-            .filter(Item.category_name == old_cat_name).count())
-        if not cat_count:
-            (session.query(Category)
-                .filter(Category.name == old_cat_name).delete())
+    if is_cat_different and not get_category_count(old_cat_name):
+        (session.query(Category)
+            .filter(Category.name == old_cat_name).delete())
     return redirect('/')
 
 
@@ -276,8 +273,7 @@ def delete_item(item_id):
         return render_template('item_delete.html', item=item)
     cat = item.category_name
     session.query(Item).filter(Item.id == item.id).delete()
-    cat_count = session.query(Item).filter(Item.category_name == cat).count()
-    if not cat_count:
+    if not get_category_count(cat):
         session.query(Category) .filter(Category.name == cat).delete()
     return redirect('/')
 
