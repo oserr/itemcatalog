@@ -231,8 +231,8 @@ def edit_item(item_id):
     if item.category_name != cat:
         is_cat_different = True
         old_cat_name = item.category_name
-    if item.name != title or item.description != description or
-        item.category_name != cat:
+    if item.name != title or item.description != description \
+        or item.category_name != cat:
         item.name = title
         item.description = description
         item.category_name = cat
