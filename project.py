@@ -242,7 +242,6 @@ def edit_item(item_id):
         if existing_item and existing_item.category == category:
             return ('Item {} already exists for category {}. Try again.'
                 .format(title, category.name))
-    user = session.query(User).get(flask_session['username'])
     is_cat_different = False
     if item.category_name != cat:
         is_cat_different = True
