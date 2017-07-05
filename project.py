@@ -52,6 +52,11 @@ def get_session_email(cookie):
     return flask_session.get(cookie)
 
 
+def get_category_count(category):
+    '''Return the number of items that are part of a given category.'''
+    return session.query(Item).filter(Item.category_name == category).count()
+
+
 engine = create_engine('sqlite:///catalog.db')
 Base.metadata.bind = engine
 
