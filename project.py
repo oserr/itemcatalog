@@ -57,6 +57,11 @@ def get_category_count(category):
     return session.query(Item).filter(Item.category_name == category).count()
 
 
+def delete_category(category):
+    '''Deletes a category from the database.'''
+    session.query(Category) .filter(Category.name == category).delete()
+
+
 engine = create_engine('sqlite:///catalog.db')
 Base.metadata.bind = engine
 
