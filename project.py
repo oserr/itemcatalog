@@ -43,6 +43,12 @@ def get_hash(salt, psswd):
 
 
 def get_session_email(cookie):
+    '''Return the email associated with the session or None if request is not
+    part of session.
+
+    :param cookie
+        The name of the cookie for the email
+    '''
     return flask_session.get(cookie)
 
 
