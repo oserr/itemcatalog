@@ -195,6 +195,57 @@ def edit_item(item_id):
             .filter(Category.name != item.category_name).all())
         return render_template('newitem.html',
             item=item, categories=categories, email=email)
+    title = request.form.get('title')
+    if not title:
+        return 'The item must have a name. Try again.'
+    title = title.lower()
+    description = request.form.get('description')
+    if not description:
+        return 'The item must have a description. Try again.'
+    cat = request.form.get('category')
+    if cat == 'other':
+        cat = request.form.get('newcategory')
+        if not cat:
+            return 'New category name must be something. Try again.'
+        cat = cat.lower()
+        if cat == 'other':
+            return 'New catogory name cannot be other. Try again.'
+        category = (session.query(Category)
+            .filter(Category.name == cat).first())
+        if category:
+            return 'Category {} already exist. Try again.'.format(cat)
+        category = Category(name=cat)
+        session.add(category)
+        session.commit()
+    else:
+        category = (session.query(Category)
+            .filter(Category.name == cat).first())
+        if not category:
+            return 'Category {} does not exist. Try again.'.format(cat)
+        existing_item = session.query(Item).filter(Item.name == title).first()
+        if existing_item and category == category:
+            return ('Item {} already exists for category {}. Try again.'
+                .format(title, category.name))
+    user = session.query(User).get(flask_session['username'])
+    is_cat_different = False
+    if item.category_name != cat:
+        is_cat_different = True
+        old_cat_name = item.category_name
+    if item.name != title or item.description != description or
+        item.category_name != cat:
+        item.name = title
+        item.description = description
+        item.category_name = cat
+        item.category = category
+        session.add(item)
+        session.commit()
+    if is_cat_different:
+        cat_count = (session.query(Item)
+            .filter(Item.category_name == old_cat_name).count())
+        if not cat_count:
+            (session.query(Category)
+                .filter(Category.name == old_cat_name).delete())
+    return redirect('/')
 
 
 @app.route('/restaurants/<int:restaurant_id>/')
