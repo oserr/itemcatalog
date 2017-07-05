@@ -20,7 +20,7 @@
     <div class="container">
       <form class="row" method="post" action="/item/{{ item.id }}/delete">
         <div class="col-md-12">
-          <p>Are you sure you want to delete {{ item.name }} in category {{ item.category_name }}</p>
+          <p>Are you sure you want to delete <strong>{{ item.name }}</strong> in category <strong>{{ item.category_name }}</strong></p>
           <button type="submit" class="btn btn-default">Submit</button>
         </div>
       </div>
