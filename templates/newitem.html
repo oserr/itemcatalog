@@ -29,11 +29,11 @@
         {% else %}
         <h3>Create a new item!</h3>
         {% endif %}
-        <input type="text" class="form-control input-lg" name="title" placeholder="{{ item.name if item else 'Title' }}">
+        <input type="text" class="form-control input-lg" name="title" placeholder="Title" value="{{ item.name if item }}">
         <textarea class="form-control input-lg comment-input" name="description" placeholder="Description">{{ item.description if item }}</textarea>
         <select name="category">
           {% if item %}
-          <option value="{{ item.category_name }}">{{ item.name }}</option>
+          <option value="{{ item.category_name }}">{{ item.category_name }}</option>
           {% endif %}
           {% for category in categories %}
           <option value="{{ category.name }}">{{ category.name }}</option>
