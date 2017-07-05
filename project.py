@@ -248,6 +248,29 @@ def edit_item(item_id):
     return redirect('/')
 
 
+@app.route('/item/<int:item_id>/delete', methods=['GET', 'POST'])
+def delete_item(item_id):
+    email = get_session_email('username')
+    if not email:
+        return 'Must be logged in to delete an item'
+    item = session.query(Item).get(item_id)
+    if not item:
+        return 'Item not found. Try again.'
+    user = session.query(User).get(email)
+    if not user:
+        return 'Must create account to be able to edit items.'
+    if item.user != user:
+        return 'To delete, user must own item'
+    if request.method == 'GET':
+        return render_template('someitem.html', item=item)
+    cat = item.category_name
+    session.query(Item).filter(Item.id = item.id).delete()
+    cat_count = session.query(Item).filter(Item.category_name == cat).count()
+    if not cat_count:
+        session.query(Category) .filter(Category.name == cat).delete()
+    return redirect('/')
+
+
 @app.route('/restaurants/<int:restaurant_id>/')
 def restaurant_menu(restaurant_id):
     restaurant = session.query(Restaurant).get(restaurant_id)
