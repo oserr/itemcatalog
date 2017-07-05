@@ -223,7 +223,7 @@ def edit_item(item_id):
         if not category:
             return 'Category {} does not exist. Try again.'.format(cat)
         existing_item = session.query(Item).filter(Item.name == title).first()
-        if existing_item and category == category:
+        if existing_item and existing_item.category == category:
             return ('Item {} already exists for category {}. Try again.'
                 .format(title, category.name))
     user = session.query(User).get(flask_session['username'])
