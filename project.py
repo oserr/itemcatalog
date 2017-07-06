@@ -192,50 +192,17 @@ def register():
 @app.route('/newitem', methods=['GET', 'POST'])
 def newitem():
     if not get_session_email('username'):
-        return 'You need to log in to create an item.'
+        return render_template('err.html',
+            err='You need to log in to create an item.')
     categories = session.query(Category).all()
     if request.method == 'GET':
         return render_template('newitem.html', categories=categories)
-    title = request.form.get('title')
-    if not title:
-        return 'The item must have a name. Try again.'
-    title = title.lower()
-    description = request.form.get('description')
-    if not description:
-        return 'The item must have a description. Try again.'
-    cat = request.form.get('category')
-    if cat == 'other':
-        cat = request.form.get('newcategory')
-        if not cat:
-            return 'New category name must be something. Try again.'
-        cat = cat.lower()
-        if cat == 'other':
-            return 'New catogory name cannot be other. Try again.'
-        category = (session.query(Category)
-            .filter(Category.name == cat).first())
-        if category:
-            return 'Category {} already exist. Try again.'.format(cat)
-        category = Category(name=cat)
-        session.add(category)
-        session.commit()
-    else:
-        category = (session.query(Category)
-            .filter(Category.name == cat).first())
-        if not category:
-            return 'Category {} does not exist. Try again.'.format(cat)
-        item = session.query(Item).filter(Item.name == title).first()
-        if item and item.category == category:
-            return ('Item {} already exists for category {}. Try again.'
-                .format(title, category.name))
+    try:
+        item_fields = get_item_fields()
+    except Exception as err:
+        return render_template('err.html', err=err)
     user = session.query(User).get(flask_session['username'])
-    item = Item(name=title,
-        description=description,
-        category_name=cat,
-        category=category,
-        user_email=user.email,
-        user=user)
-    session.add(item)
-    session.commit()
+    item_fields.create_item(user)
     return redirect('/')
 
 
