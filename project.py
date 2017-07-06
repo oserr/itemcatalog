@@ -62,6 +62,20 @@ def delete_category(category):
     session.query(Category) .filter(Category.name == category).delete()
 
 
+class ItemFields:
+    '''Plain data object to hold fields necessary to create or update an Item.
+
+    Contains everything, except user information, necessary to initialize
+    an Item.
+    '''
+    def __init__(self, name, description, category_name, category):
+        '''Initialize an ItemField.'''
+        self.name = name
+        self.description = description
+        self.category_name = category_name
+        self.category = category
+
+
 def get_item_fields():
     '''Gets the fields from a form to edit or create an item.
 
