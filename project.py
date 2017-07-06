@@ -92,6 +92,23 @@ class ItemFields:
         session.add(item)
         session.commit()
 
+    def update_item(self, item):
+        '''Update an item if any of the fields have changed.'''
+        if not user:
+            raise ValueError('User cannot be null')
+        if item.category_name != self.category_name and not category:
+            self.category = Category(name=self.category_name)
+            session.add(category)
+            session.commit()
+        if item.name != self.name or item.description != self.description \
+            or item.category_name != self.category_name:
+            item.name = self.name
+            item.description = self.description
+            item.category_name = self.category_name
+            item.category = self.category
+            session.add(item)
+            session.commit()
+
 
 def get_item_fields():
     '''Gets the fields from a form to edit or create an item.
