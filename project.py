@@ -81,7 +81,7 @@ class ItemFields:
             raise ValueError('User cannot be null')
         if not category:
             self.create_category()
-        item = Item(name=self.name
+        item = Item(name=self.name,
             description=self.description,
             category_name=self.category_name,
             category=self.category,
