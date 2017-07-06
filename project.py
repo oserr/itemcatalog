@@ -255,65 +255,27 @@ def getitem(item_id):
 def edit_item(item_id):
     email = get_session_email('username')
     if not email:
-        return 'Must be logged in to edit an item'
+        return render_template('err.html',
+            err='Must be logged in to edit an item')
     item = session.query(Item).get(item_id)
     if not item:
-        return 'Item not found. Try again.'
+        return render_template('err.html', err='Item not found. Try again.')
     user = session.query(User).get(email)
     if not user:
-        return 'Must create account to be able to edit items.'
+        return render_template('err.html',
+            err='Must create account to be able to edit items.')
     if item.user != user:
-        return 'To edit, user must own item'
+        return render_template('err.html', err='To edit, user must own item')
     if request.method == 'GET':
         categories = (session.query(Category)
             .filter(Category.name != item.category_name).all())
         return render_template('newitem.html',
             item=item, categories=categories, email=email)
-    title = request.form.get('title')
-    if not title:
-        return 'The item must have a name. Try again.'
-    title = title.lower()
-    description = request.form.get('description')
-    if not description:
-        return 'The item must have a description. Try again.'
-    cat = request.form.get('category')
-    if cat == 'other':
-        cat = request.form.get('newcategory')
-        if not cat:
-            return 'New category name must be something. Try again.'
-        cat = cat.lower()
-        if cat == 'other':
-            return 'New catogory name cannot be other. Try again.'
-        category = (session.query(Category)
-            .filter(Category.name == cat).first())
-        if category:
-            return 'Category {} already exist. Try again.'.format(cat)
-        category = Category(name=cat)
-        session.add(category)
-        session.commit()
-    else:
-        category = (session.query(Category)
-            .filter(Category.name == cat).first())
-        if not category:
-            return 'Category {} does not exist. Try again.'.format(cat)
-        existing_item = session.query(Item).filter(Item.name == title).first()
-        if existing_item and existing_item.category == category:
-            return ('Item {} already exists for category {}. Try again.'
-                .format(title, category.name))
-    is_cat_different = False
-    if item.category_name != cat:
-        is_cat_different = True
-        old_cat_name = item.category_name
-    if item.name != title or item.description != description \
-        or item.category_name != cat:
-        item.name = title
-        item.description = description
-        item.category_name = cat
-        item.category = category
-        session.add(item)
-        session.commit()
-    if is_cat_different and not get_category_count(old_cat_name):
-        delete_category(category)
+    try:
+        item_fields = get_item_fields()
+    except Exception as err:
+        return render_template('err.html', err=err)
+    item_fields.update_item(item)
     return redirect('/')
 
 
