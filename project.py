@@ -75,6 +75,23 @@ class ItemFields:
         self.category_name = category_name
         self.category = category
 
+    def create_item(self, user):
+        '''Create an item from these item fields for a given user.'''
+        if not user:
+            raise ValueError('User cannot be null')
+        if not category:
+            self.category = Category(name=self.category_name)
+            session.add(category)
+            session.commit()
+        item = Item(name=self.name
+            description=self.description,
+            category_name=self.category_name,
+            category=self.category,
+            user_email=user.email,
+            user=user)
+        session.add(item)
+        session.commit()
+
 
 def get_item_fields():
     '''Gets the fields from a form to edit or create an item.
