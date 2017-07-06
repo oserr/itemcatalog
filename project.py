@@ -80,9 +80,7 @@ class ItemFields:
         if not user:
             raise ValueError('User cannot be null')
         if not category:
-            self.category = Category(name=self.category_name)
-            session.add(category)
-            session.commit()
+            self.create_category()
         item = Item(name=self.name
             description=self.description,
             category_name=self.category_name,
@@ -97,9 +95,7 @@ class ItemFields:
         if not user:
             raise ValueError('User cannot be null')
         if item.category_name != self.category_name and not category:
-            self.category = Category(name=self.category_name)
-            session.add(category)
-            session.commit()
+            self.create_category()
         if item.name != self.name or item.description != self.description \
             or item.category_name != self.category_name:
             item.name = self.name
@@ -108,6 +104,12 @@ class ItemFields:
             item.category = self.category
             session.add(item)
             session.commit()
+
+    def create_category(self):
+        '''Creates a new category and sets its category field.'''
+        self.category = Category(name=self.category_name)
+        session.add(category)
+        session.commit()
 
 
 def get_item_fields():
