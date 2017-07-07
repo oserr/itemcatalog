@@ -260,26 +260,21 @@ def getitem(item_id):
 def edit_item(item_id):
     email = get_session_email('username')
     if not email:
-        return render_template('err.html',
-            err='Must be logged in to edit an item')
+        raise AppErr('Must be logged in to edit an item')
     item = session.query(Item).get(item_id)
     if not item:
-        return render_template('err.html', err='Item not found. Try again.')
+        raise AppErr('Item not found.')
     user = session.query(User).get(email)
     if not user:
-        return render_template('err.html',
-            err='Must create account to be able to edit items.')
+        raise AppErr('Must create account to be able to edit items.')
     if item.user != user:
-        return render_template('err.html', err='To edit, user must own item')
+        raise AppErr('To edit, user must own item')
     if request.method == 'GET':
         categories = (session.query(Category)
             .filter(Category.name != item.category_name).all())
         return render_template('newitem.html',
             item=item, categories=categories, email=email)
-    try:
-        item_fields = get_item_fields()
-    except Exception as err:
-        return render_template('err.html', err=err)
+    item_fields = get_item_fields()
     item_fields.update_item(item)
     return redirect('/')
 
