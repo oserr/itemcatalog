@@ -112,6 +112,11 @@ class ItemFields:
         session.commit()
 
 
+class AppErr(Exception):
+    '''An exception for all application errors.'''
+    pass
+
+
 def get_item_fields():
     '''Gets the fields from a form to edit or create an item.
 
