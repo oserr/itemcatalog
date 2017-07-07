@@ -79,7 +79,7 @@ class ItemFields:
         '''Create an item from these item fields for a given user.'''
         if not user:
             raise ValueError('User cannot be null')
-        if not category:
+        if not self.category:
             self.create_category()
         item = Item(name=self.name,
             description=self.description,
@@ -108,7 +108,7 @@ class ItemFields:
     def create_category(self):
         '''Creates a new category and sets its category field.'''
         self.category = Category(name=self.category_name)
-        session.add(category)
+        session.add(self.category)
         session.commit()
 
 
