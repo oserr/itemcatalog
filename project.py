@@ -214,13 +214,13 @@ def register():
         return send_from_directory('html', 'register.html')
     username = request.form['user']
     if not username:
-        return 'The username cannot be empty. Try again.'
+        raise AppErr('The username cannot be empty.')
     password = request.form['password']
     if not password:
-        return 'The password cannot be empty. Try again.'
+        raise AppErr('The password cannot be empty.')
     user = session.query(User).get(username)
     if user:
-        return 'The username is already taken. Try again.'
+        raise AppErr('The username is already taken.')
     salt = gensalt()
     hsh = get_hash(salt, password)
     user = User(email=username, salt=salt, pwdhsh=hsh)
