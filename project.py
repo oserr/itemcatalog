@@ -233,15 +233,11 @@ def register():
 @app.route('/newitem', methods=['GET', 'POST'])
 def newitem():
     if not get_session_email('username'):
-        return render_template('err.html',
-            err='You need to log in to create an item.')
+        raise AppErr('You need to log in to create an item.')
     categories = session.query(Category).all()
     if request.method == 'GET':
         return render_template('newitem.html', categories=categories)
-    try:
-        item_fields = get_item_fields()
-    except Exception as err:
-        return render_template('err.html', err=err)
+    item_fields = get_item_fields()
     user = session.query(User).get(flask_session['username'])
     item_fields.create_item(user)
     return redirect('/')
