@@ -251,7 +251,7 @@ def newitem():
 def getitem(item_id):
     item = session.query(Item).get(item_id)
     if not item:
-        return 'Item not found. Try again.'
+        raise AppErr('Item not found.')
     return render_template('item.html',
         email=get_session_email('username'), item=item)
 
