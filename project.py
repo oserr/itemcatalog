@@ -63,7 +63,7 @@ def delete_category(category):
 
 
 class ItemFields:
-    '''Plain data object to hold fields necessary to create or update an Item.
+    '''A helper class to create or update Items.
 
     Contains everything, except user information, necessary to initialize
     an Item.
