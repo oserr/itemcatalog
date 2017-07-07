@@ -278,15 +278,15 @@ def edit_item(item_id):
 def delete_item(item_id):
     email = get_session_email('username')
     if not email:
-        return 'Must be logged in to delete an item'
+        raise AppErr('Must be logged in to delete an item.')
     item = session.query(Item).get(item_id)
     if not item:
-        return 'Item not found. Try again.'
+        raise AppErr('Item not found.')
     user = session.query(User).get(email)
     if not user:
-        return 'Must create account to be able to edit items.'
+        raise AppErr('Must create account to be able to edit items.')
     if item.user != user:
-        return 'To delete, user must own item'
+        raise AppErr('To delete, user must own item')
     if request.method == 'GET':
         return render_template('item_delete.html', item=item)
     cat = item.category_name
