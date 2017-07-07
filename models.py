@@ -34,6 +34,15 @@ class Item(Base):
     user_email = Column(String(75), ForeignKey('user.email'))
     user = relationship(User)
 
+    def to_dict(self):
+        '''Return this Item in dictionary format.'''
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'category_name': self.category_name
+        }
+
 
 engine = create_engine('sqlite:///catalog.db')
 Base.metadata.create_all(engine)
