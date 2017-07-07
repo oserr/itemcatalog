@@ -127,33 +127,33 @@ def get_item_fields():
     '''
     title = request.form.get('title')
     if not title:
-        raise Exception('The item must have a name.')
+        raise AppErr('The item must have a name.')
     title = title.lower()
     description = request.form.get('description')
     if not description:
-        raise Exception('The item must have a description.')
+        raise AppErr('The item must have a description.')
     cat_name = request.form.get('category')
     category = None
     if not cat_name:
-        raise Exception('The item must have a category')
+        raise AppErr('The item must have a category')
     cat_name = cat_name.lower()
     if cat_name == 'other':
         cat_name = request.form.get('newcategory')
         if not cat_name:
-            raise Exception('New category name must be something.')
+            raise AppErr('New category name must be something.')
         cat_name = cat_name.lower()
         if cat_name == 'other':
-            raise Exception('New catogory name cannot be other.')
+            raise AppErr('New catogory name cannot be other.')
         if get_category_count(cat_name):
-            raise Exception('Category {} already exist.'.format(cat_name))
+            raise AppErr('Category {} already exist.'.format(cat_name))
     else:
         category = session.query(Category) \
             .filter(Category.name == cat_name).first()
         if not category:
-            raise Exception('Category {} does not exist.'.format(cat_name))
+            raise AppErr('Category {} does not exist.'.format(cat_name))
         item = session.query(Item).filter(Item.name == title).first()
         if item and item.category == category:
-            raise Exception('Item {} already exists for category {}.' \
+            raise AppErr('Item {} already exists for category {}.' \
                 .format(title, category.name))
     return ItemFields(title, description, cat_name, category)
 
