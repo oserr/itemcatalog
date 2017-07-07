@@ -19,6 +19,10 @@ class Category(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
 
+    def to_dict(self):
+        '''Return this Category in dictionary format.'''
+        return {'id': self.id, 'name': self.name}
+
 
 class Item(Base):
     __tablename__ = 'item'
