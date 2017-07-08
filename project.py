@@ -173,7 +173,7 @@ def index():
     categories = session.query(Category).all()
     items = session.query(Item).all()
     return render_template('index.html',
-        email=get_session_email('username'),
+        email=get_session_email(SESSION_COOKIE),
         categories=categories, items=items)
 
 
@@ -277,7 +277,7 @@ def edit_item(item_id):
 
 @app.route('/item/<int:item_id>/delete', methods=['GET', 'POST'])
 def delete_item(item_id):
-    email = get_session_email('username')
+    email = get_session_email(SESSION_COOKIE)
     if not email:
         raise AppErr('Must be logged in to delete an item.')
     item = session.query(Item).get(item_id)
