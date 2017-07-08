@@ -177,6 +177,17 @@ def index():
         categories=categories, items=items)
 
 
+@app.route('/items/<int:category_id>')
+def get_category_items(category_id):
+    category = session.query(Category).get(category_id)
+    if not category:
+        raise AppErr('Category not found.')
+    items = session.query(Item).filter(Item.category == category).all()
+    return render_template('index.html',
+        email=get_session_email(SESSION_COOKIE),
+        categories=[category], items=items)
+
+
 @app.route('/logout')
 def logout():
     flask_session.pop(SESSION_COOKIE, None)
