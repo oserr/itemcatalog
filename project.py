@@ -165,6 +165,7 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 app = Flask(__name__, static_url_path='')
+SESSION_COOKIE='email'
 
 @app.route('/')
 @app.route('/items')
@@ -178,36 +179,36 @@ def index():
 
 @app.route('/logout')
 def logout():
-    flask_session.pop('username', None)
+    flask_session.pop(SESSION_COOKIE, None)
     return redirect('/')
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if get_session_email('username'):
+    if get_session_email(SESSION_COOKIE):
         return redirect('/')
     if request.method == 'GET':
         return send_from_directory('html', 'login.html')
-    username = request.form['user']
-    if not username:
-        raise AppErr('The username cannot be empty.')
+    email = request.form['email']
+    if not email:
+        raise AppErr('The email cannot be empty.')
     password = request.form['password']
     if not password:
         raise AppErr('The password cannot be empty.')
-    user = session.query(User).get(username)
+    user = session.query(User).get(email)
     if not user:
-        raise AppErr('A user with name {} does not exist.'.format(username))
+        raise AppErr('A user with email {} does not exist.'.format(email))
     salt = gensalt()
     hsh = get_hash(user.salt, password)
     if hsh != user.pwdhsh:
         raise AppErr('The password is incorrect.')
-    flask_session['username'] = username
+    flask_session[SESSION_COOKIE] = email
     return redirect('/')
 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if get_session_email('username'):
+    if get_session_email(SESSION_COOKIE):
         return redirect('/')
     if request.method == 'GET':
         return send_from_directory('html', 'register.html')
@@ -225,19 +226,19 @@ def register():
     user = User(email=username, salt=salt, pwdhsh=hsh)
     session.add(user)
     session.commit()
-    flask_session['username'] = username
+    flask_session[SESSION_COOKIE] = username
     return redirect('/')
 
 
 @app.route('/newitem', methods=['GET', 'POST'])
 def newitem():
-    if not get_session_email('username'):
+    if not get_session_email(SESSION_COOKIE):
         raise AppErr('You need to log in to create an item.')
     categories = session.query(Category).all()
     if request.method == 'GET':
         return render_template('newitem.html', categories=categories)
     item_fields = get_item_fields()
-    user = session.query(User).get(flask_session['username'])
+    user = session.query(User).get(flask_session[SESSION_COOKIE])
     item_fields.create_item(user)
     return redirect('/')
 
@@ -248,12 +249,12 @@ def getitem(item_id):
     if not item:
         raise AppErr('Item not found.')
     return render_template('item.html',
-        email=get_session_email('username'), item=item)
+        email=get_session_email(SESSION_COOKIE), item=item)
 
 
 @app.route('/item/<int:item_id>/edit', methods=['GET', 'POST'])
 def edit_item(item_id):
-    email = get_session_email('username')
+    email = get_session_email(SESSION_COOKIE)
     if not email:
         raise AppErr('Must be logged in to edit an item')
     item = session.query(Item).get(item_id)
