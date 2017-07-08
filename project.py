@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # project.py
+import json
 import hmac
 import string
 import random
@@ -175,6 +176,15 @@ def index():
     return render_template('index.html',
         email=get_session_email(SESSION_COOKIE),
         categories=categories, items=items)
+
+
+@app.route('/json')
+@app.route('/json/items')
+def json_index():
+    categories = [cat.to_dict() for cat in session.query(Category).all()]
+    items = [item.to_dict() for item in session.query(Item).all()]
+    response_dict = {'categories': categories, 'items': items}
+    return json.dumps(response_dict)
 
 
 @app.route('/items/<int:category_id>')
