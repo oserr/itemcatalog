@@ -283,6 +283,14 @@ def getitem(item_id):
         email=get_session_email(SESSION_COOKIE), item=item)
 
 
+@app.route('/json/item/<int:item_id>')
+def json_getitem(item_id):
+    item = session.query(Item).get(item_id)
+    if not item:
+        raise AppErr('Item not found.')
+    return json.dumps({'item': item.to_dict()})
+
+
 @app.route('/item/<int:item_id>/edit', methods=['GET', 'POST'])
 def edit_item(item_id):
     email = get_session_email(SESSION_COOKIE)
