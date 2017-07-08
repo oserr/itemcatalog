@@ -198,6 +198,16 @@ def get_category_items(category_id):
         categories=[category], items=items)
 
 
+@app.route('/json/items/<int:category_id>')
+def json_get_category_items(category_id):
+    category = session.query(Category).get(category_id)
+    if not category:
+        raise AppErr('Category not found.')
+    items = [item.to_dict() for item in \
+        session.query(Item).filter(Item.category == category).all()]
+    return json.dumps({'categories': [category.to_dict()], 'items': items})
+
+
 @app.route('/logout')
 def logout():
     flask_session.pop(SESSION_COOKIE, None)
