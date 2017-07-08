@@ -27,7 +27,7 @@
         <div class="col-md-4">
           <h2>Categories</h2>
           {% for category in categories %}
-            <p>{{ category.name }}</p>
+            <p><a href="/items/{{ category.id }}">{{ category.name }}</a></p>
           {% endfor %}
         </div>
         <div class="col-md-8">
