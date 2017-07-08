@@ -32,7 +32,7 @@
           <p>{{ item.category_name }}</p>
         </div>
       </div>
-      {% if email %}
+      {% if email == item.email %}
       <div class="row">
         <div class="col-md-12">
           <a class="btn btn-default" href="/item/{{ item.id }}/edit" role="button">Edit</a>
