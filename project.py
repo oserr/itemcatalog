@@ -212,21 +212,21 @@ def register():
         return redirect('/')
     if request.method == 'GET':
         return send_from_directory('html', 'register.html')
-    username = request.form['user']
-    if not username:
-        raise AppErr('The username cannot be empty.')
+    email = request.form['email']
+    if not email:
+        raise AppErr('The email cannot be empty.')
     password = request.form['password']
     if not password:
         raise AppErr('The password cannot be empty.')
-    user = session.query(User).get(username)
+    user = session.query(User).get(email)
     if user:
-        raise AppErr('The username is already taken.')
+        raise AppErr('The email is already taken.')
     salt = gensalt()
     hsh = get_hash(salt, password)
-    user = User(email=username, salt=salt, pwdhsh=hsh)
+    user = User(email=email, salt=salt, pwdhsh=hsh)
     session.add(user)
     session.commit()
-    flask_session[SESSION_COOKIE] = username
+    flask_session[SESSION_COOKIE] = email
     return redirect('/')
 
 
