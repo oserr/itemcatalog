@@ -1,52 +1,36 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>ItemCatalog</title>
-    <link rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-      crossorigin="anonymous">
-  </head>
-  <body>
-    <header class="jumbotron">
-      <h1>ItemCatalog</h1>
-      <p class="login-buttons">
-        <a class="btn btn-default" href="/logout" role="button">Logout</a>
-      </p>
-    </header>
-    <div class="container">
-    {% if item %}
-    <form class="row" method="post" action="/item/{{ item.id }}/edit">
-    {% else %}
-    <form class="row" method="post" action="/newitem">
-    {% endif %}
-      <div class="col-md-8 col-centered">
+{% extends "base.html" %}
+{% block content %}
+  <header class="jumbotron">
+    <h1>ItemCatalog</h1>
+    <p class="login-buttons">
+      <a class="btn btn-default" href="/logout" role="button">Logout</a>
+    </p>
+  </header>
+  <div class="container">
+  {% if item %}
+  <form class="row" method="post" action="/item/{{ item.id }}/edit">
+  {% else %}
+  <form class="row" method="post" action="/newitem">
+  {% endif %}
+    <div class="col-md-8 col-centered">
+      {% if item %}
+      <h3>Edit the item</h3>
+      {% else %}
+      <h3>Create a new item!</h3>
+      {% endif %}
+      <input type="text" class="form-control input-lg" name="title" placeholder="Title" value="{{ item.name if item }}">
+      <textarea class="form-control input-lg comment-input" name="description" placeholder="Description">{{ item.description if item }}</textarea>
+      <select name="category">
         {% if item %}
-        <h3>Edit the item</h3>
-        {% else %}
-        <h3>Create a new item!</h3>
+        <option value="{{ item.category_name }}">{{ item.category_name }}</option>
         {% endif %}
-        <input type="text" class="form-control input-lg" name="title" placeholder="Title" value="{{ item.name if item }}">
-        <textarea class="form-control input-lg comment-input" name="description" placeholder="Description">{{ item.description if item }}</textarea>
-        <select name="category">
-          {% if item %}
-          <option value="{{ item.category_name }}">{{ item.category_name }}</option>
-          {% endif %}
-          {% for category in categories %}
-          <option value="{{ category.name }}">{{ category.name }}</option>
-          {% endfor %}
-          <option value="other">other</option>
-        </select>
-        <input type="text" class="form-control input-lg" name="newcategory" placeholder="New category">
-        <button type="submit" class="btn btn-default pull-right">Submit</button>
-      </div>
-    </form>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-      integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-      crossorigin="anonymous"></script>
-  </body>
-</html>
+        {% for category in categories %}
+        <option value="{{ category.name }}">{{ category.name }}</option>
+        {% endfor %}
+        <option value="other">other</option>
+      </select>
+      <input type="text" class="form-control input-lg" name="newcategory" placeholder="New category">
+      <button type="submit" class="btn btn-default pull-right">Submit</button>
+    </div>
+  </form>
+{% endblock %}
