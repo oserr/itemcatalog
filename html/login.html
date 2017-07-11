@@ -50,7 +50,21 @@
     <script>
       function onSignIn(googleUser) {
         var profile = googleUser.getBasicProfile();
-        console.log('profile = ' + profile);
+        console.log('profile = ' + JSON.stringify(profile));
+        var id_token = googleUser.getAuthResponse().id_token;
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            window.location.href = '/';
+          }
+          // TODO: DO SOMETHING ON ERROR
+        };
+        xhr.onerror = function() {
+          // TODO: DO SOMETHING ON ERROR
+        };
+        xhr.open('POST', '/glogin', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send('token=' + id_token);
       }
     </script>
   </body>
