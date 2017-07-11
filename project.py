@@ -246,13 +246,16 @@ def glogin():
         return redirect('/')
     token = request.form['token']
     id_info = auth_client.verify_id_token(token, CLIENT_ID)
-    if id_info['iss'] not in ('accounts.google.com', 'https://accounts.google.com'):
+    if id_info['iss'] not in ('accounts.google.com',
+        'https://accounts.google.com'):
         raise AppErr('Credentials from Google are not right')
     email = id_info['email']
     user = session.query(User).get(email)
     if not user:
         raise AppErr('User {} does not have an account'.format(email))
     flask_session[SESSION_COOKIE] = email
+    # TODO: send error responses in json so onerrer or status != 200
+    # can do something
     return ''
 
 
