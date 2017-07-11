@@ -242,7 +242,7 @@ CLIENT_ID = json.loads(open('client_secret.json').read())['web']['client_id']
 
 @app.route('/glogin', methods=['POST'])
 def glogin():
-    if get_session_email('gcookie') or get_session_email(SESSION_COOKIE):
+    if get_session_email(SESSION_COOKIE):
         return redirect('/')
     token = request.form['token']
     id_info = auth_client.verify_id_token(token, CLIENT_ID)
@@ -252,7 +252,7 @@ def glogin():
     user = session.query(User).get(email)
     if not user:
         raise AppErr('User {} does not have an account'.format(email))
-    flask_session['gcookie'] = email
+    flask_session[SESSION_COOKIE] = email
     return ''
 
 
