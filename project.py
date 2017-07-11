@@ -4,6 +4,7 @@ import json
 import hmac
 import string
 import random
+from oauth2client import client as auth_client
 from flask import (Flask, render_template,
                    request, redirect, url_for, flash,
                    send_from_directory)
@@ -235,6 +236,24 @@ def login():
         raise AppErr('The password is incorrect.')
     flask_session[SESSION_COOKIE] = email
     return redirect('/')
+
+
+CLIENT_ID = json.loads(open('client_secret.json').read())['web']['client_id']
+
+@app.route('/glogin', methods=['POST'])
+def glogin():
+    if get_session_email('gcookie') or get_session_email(SESSION_COOKIE):
+        return redirect('/')
+    token = request.form['token']
+    id_info = auth_client.verify_id_token(token, CLIENT_ID)
+    if id_info['iss'] not in ('accounts.google.com', 'https://accounts.google.com'):
+        raise AppErr('Credentials from Google are not right')
+    email = id_info['email']
+    user = session.query(User).get(email)
+    if not user:
+        raise AppErr('User {} does not have an account'.format(email))
+    flask_session['gcookie'] = email
+    return ''
 
 
 @app.route('/register', methods=['GET', 'POST'])
