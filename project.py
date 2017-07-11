@@ -220,7 +220,7 @@ def login():
     if get_session_email(SESSION_COOKIE):
         return redirect('/')
     if request.method == 'GET':
-        return send_from_directory('html', 'login.html')
+        return render_template('login.html')
     email = request.form['email']
     if not email:
         raise AppErr('The email cannot be empty.')
