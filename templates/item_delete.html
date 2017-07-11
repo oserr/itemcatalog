@@ -1,33 +1,17 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>ItemCatalog</title>
-    <link rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-      crossorigin="anonymous">
-  </head>
-  <body>
-    <header class="jumbotron">
-      <h1>ItemCatalog</h1>
-      <p class="login-buttons">
-        <a class="btn btn-default" href="/logout" role="button">Logout</a>
-      </p>
-    </header>
-    <div class="container">
-      <form class="row" method="post" action="/item/{{ item.id }}/delete">
-        <div class="col-md-12">
-          <p>Are you sure you want to delete <strong>{{ item.name }}</strong> in category <strong>{{ item.category_name }}</strong></p>
-          <button type="submit" class="btn btn-default">Submit</button>
-        </div>
+{% extends "base.html" %}
+{% block content %}
+  <header class="jumbotron">
+    <h1>ItemCatalog</h1>
+    <p class="login-buttons">
+      <a class="btn btn-default" href="/logout" role="button">Logout</a>
+    </p>
+  </header>
+  <div class="container">
+    <form class="row" method="post" action="/item/{{ item.id }}/delete">
+      <div class="col-md-12">
+        <p>Are you sure you want to delete <strong>{{ item.name }}</strong> in category <strong>{{ item.category_name }}</strong></p>
+        <button type="submit" class="btn btn-default">Submit</button>
       </div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-      integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-      crossorigin="anonymous"></script>
-  </body>
-</html>
+  </div>
+{% endblock %}
