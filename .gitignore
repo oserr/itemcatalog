@@ -10,3 +10,6 @@ __pycache__/*
 
 # Ignore oauth info
 .oauth
+
+# Ignore oauth client secret file
+client_secret.json
