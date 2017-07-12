@@ -1,4 +1,12 @@
 {% extends "base.html" %}
+{% block head %}
+  <meta name="google-signin-client_id" content="1079849348157-0oqrbkk9rj24k79vcni7e2tu8p081t3a.apps.googleusercontent.com">
+  <style>
+    .hidden {
+      display: none;
+    }
+  </style>
+{% endblock %}
 {% block content %}
   <div class="container" style="margin-top: 40px;">
     <form method="post" action="/login" class="login-form">
@@ -20,13 +28,16 @@
         </div>
       </div>
     </form>
-    <hr>
     <div class="g-signin2" data-scope="openid email" data-onsuccess="onSignIn"></div>
     <hr>
     <div class="row">
-      <div class="col-xs-6">
+      <div id="register-div" class="col-xs-6">
         <p>Don't have an account yet?<p>
         <a class="btn btn-primary h1" href="/register" role="button">Register</a>
+      </div>
+      <div id="login-div" class="col-xs-6 hidden">
+        <p>Already have an account?<p>
+        <a class="btn btn-primary h1" href="/login" role="button">Login</a>
       </div>
     </div>
     <div id="err-msg">
@@ -36,25 +47,43 @@
 {% block js  %}
   <script>
     function onSignIn(googleUser) {
+      console.log('called onSignIn()');
       var profile = googleUser.getBasicProfile();
-      console.log('profile = ' + JSON.stringify(profile));
       var id_token = googleUser.getAuthResponse().id_token;
-      var xhr = new XMLHttpRequest();
-      xhr.onload = function() {
-        if (xhr.status === 200) {
-          window.location.href = '/';
-        } else {
-          var div = document.getElementById('err-msg');
-          div.innerHTML = '<p>Unable to signin via Google</p>';
-        }
-      };
-      xhr.onerror = function() {
-        var div = document.getElementById('err-msg');
-        div.innerHTML = '<p>Unable to signin via Google</p>';
-      };
-      xhr.open('POST', '/glogin', true);
-      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-      xhr.send('token=' + id_token);
+      $.post('/glogin', 'token=' + id_token)
+        .done((data, textStatus, xhr) => {
+          if (xhr.status === 200) {
+            console.log('redirecting to main page');
+            window.location.replace('/');
+          } else {
+            console.log('Received non-success response with status=' + xhr.status);
+            $('#err-msg').html('<p>Unable to signin via Google</p>');
+          }
+        })
+        .fail((data, textStatus, err) => {
+            console.log('Post request failed with error ' + err);
+            $('#err-msg').html('<p>Unable to signin via Google</p>');
+        });
     }
+
+    $('#register-div a:first').click(e => {
+      console.log('entered register handler');
+      e.preventDefault();
+      $('.g-signin2').addClass('hidden');
+      $('#register-div').addClass('hidden');
+      $('#login-div').removeClass('hidden');
+      $('form').attr('action', '/register');
+      $('button').text('Register');
+    });
+
+    $('#login-div a:first').click(e => {
+      console.log('entered login handler');
+      e.preventDefault();
+      $('.g-signin2').removeClass('hidden');
+      $('#register-div').removeClass('hidden');
+      $('#login-div').addClass('hidden');
+      $('form').attr('action', '/login');
+      $('button').text('Login');
+    });
   </script>
 {% endblock %}
