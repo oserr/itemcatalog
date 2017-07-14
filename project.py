@@ -15,14 +15,14 @@ from models import User, Category, Item, Base
 
 
 def gensalt(length=16):
-    """Generate a random salt value for a password.
+    '''Generate a random salt value for a password.
 
     :param length
         The lenght of the salt value, with default value of 16.
     :return
         A string containing a randomly generated salt value composed of
         alphanumeric characters.
-    """
+    '''
     if not length or length < 0:
         raise ValueError('The salt length must be a positive integer')
     alnum = string.ascii_letters + string.digits
@@ -30,7 +30,7 @@ def gensalt(length=16):
 
 
 def get_hash(salt, psswd):
-    """Create a hash from a salt and password.
+    '''Create a hash from a salt and password.
 
     :param salt
         The salt value. Cannot be empty.
@@ -38,7 +38,7 @@ def get_hash(salt, psswd):
         The password value. Cannot be empty.
     :return
         A hash value of the salt and password.
-    """
+    '''
     if not salt or not psswd:
         raise ValueError('The salt and password cannot be empty')
     return hmac.new(salt.encode(), psswd.encode()).hexdigest()
