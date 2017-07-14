@@ -172,6 +172,7 @@ SESSION_COOKIE='email'
 @app.route('/')
 @app.route('/items')
 def index():
+    '''Renders the categories and items on the home page.'''
     categories = session.query(Category).all()
     items = session.query(Item).all()
     return render_template('index.html',
@@ -182,6 +183,7 @@ def index():
 @app.route('/json')
 @app.route('/json/items')
 def json_index():
+    '''Returns the categories and items in json format.'''
     categories = [cat.to_dict() for cat in session.query(Category).all()]
     items = [item.to_dict() for item in session.query(Item).all()]
     response_dict = {'categories': categories, 'items': items}
@@ -190,6 +192,7 @@ def json_index():
 
 @app.route('/items/<int:category_id>')
 def get_category_items(category_id):
+    '''Renders the items associated with a given category.'''
     category = session.query(Category).get(category_id)
     if not category:
         raise AppErr('Category not found.')
@@ -201,6 +204,7 @@ def get_category_items(category_id):
 
 @app.route('/json/items/<int:category_id>')
 def json_get_category_items(category_id):
+    '''Returns the items associated with a given category in json format.'''
     category = session.query(Category).get(category_id)
     if not category:
         raise AppErr('Category not found.')
@@ -211,12 +215,16 @@ def json_get_category_items(category_id):
 
 @app.route('/logout')
 def logout():
+    '''Logs out a user by removing the cookie associated with a session.'''
     flask_session.pop(SESSION_COOKIE, None)
     return redirect('/')
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    '''Logs in a user by creating a session cookie and redirects user to home
+    page.
+    '''
     if get_session_email(SESSION_COOKIE):
         return redirect('/')
     if request.method == 'GET':
@@ -242,6 +250,7 @@ CLIENT_ID = json.loads(open('client_secret.json').read())['web']['client_id']
 
 @app.route('/glogin', methods=['POST'])
 def glogin():
+    '''Logs in a user via google signin.'''
     if get_session_email(SESSION_COOKIE):
         return redirect('/')
     token = request.form['token']
@@ -261,6 +270,7 @@ def glogin():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    '''Creates a record for a new user and redirects user to the main page.'''
     if get_session_email(SESSION_COOKIE):
         return redirect('/')
     if request.method == 'GET':
@@ -285,6 +295,7 @@ def register():
 
 @app.route('/newitem', methods=['GET', 'POST'])
 def newitem():
+    '''Lets a user a create a new item for a given category.'''
     if not get_session_email(SESSION_COOKIE):
         raise AppErr('You need to log in to create an item.')
     categories = session.query(Category).all()
@@ -298,6 +309,7 @@ def newitem():
 
 @app.route('/item/<int:item_id>')
 def getitem(item_id):
+    '''Renders a specific item.'''
     item = session.query(Item).get(item_id)
     if not item:
         raise AppErr('Item not found.')
@@ -307,6 +319,7 @@ def getitem(item_id):
 
 @app.route('/json/item/<int:item_id>')
 def json_getitem(item_id):
+    '''Returns the data for a given item in json format.'''
     item = session.query(Item).get(item_id)
     if not item:
         raise AppErr('Item not found.')
@@ -315,6 +328,7 @@ def json_getitem(item_id):
 
 @app.route('/item/<int:item_id>/edit', methods=['GET', 'POST'])
 def edit_item(item_id):
+    '''Allows a user who owns an item to edit the data for for it.'''
     email = get_session_email(SESSION_COOKIE)
     if not email:
         raise AppErr('Must be logged in to edit an item')
@@ -338,6 +352,7 @@ def edit_item(item_id):
 
 @app.route('/item/<int:item_id>/delete', methods=['GET', 'POST'])
 def delete_item(item_id):
+    '''Allows a user a who owns an item to delete the item.'''
     email = get_session_email(SESSION_COOKIE)
     if not email:
         raise AppErr('Must be logged in to delete an item.')
