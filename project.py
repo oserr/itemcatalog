@@ -8,6 +8,7 @@ from oauth2client import client as auth_client
 from flask import (Flask, render_template,
                    request, redirect, url_for, flash,
                    send_from_directory)
+from flask.json import jsonify
 from flask import session as flask_session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -185,7 +186,7 @@ def json_index():
     categories = [cat.to_dict() for cat in session.query(Category).all()]
     items = [item.to_dict() for item in session.query(Item).all()]
     response_dict = {'categories': categories, 'items': items}
-    return json.dumps(response_dict)
+    return jsonify(response_dict)
 
 
 @app.route('/items/<int:category_id>')
@@ -208,7 +209,7 @@ def json_get_category_items(category_id):
         raise AppErr('Category not found.')
     items = [item.to_dict() for item in \
         session.query(Item).filter(Item.category == category).all()]
-    return json.dumps({'categories': [category.to_dict()], 'items': items})
+    return jsonify({'categories': [category.to_dict()], 'items': items})
 
 
 @app.route('/logout')
@@ -246,6 +247,54 @@ def login():
         raise AppErr('The password is incorrect.')
     flask_session[SESSION_COOKIE] = email
     return redirect('/')
+
+
+SUCCESS_LOGIN = {'success': True}
+
+def gen_error_msg(msg):
+    ''' Return a json response with a failure message.'''
+    return jsonify({'success': false, 'error': msg})
+
+
+@app.route('/json/login', methods=['POST'])
+def json_login():
+    '''JSON API endpoint to login a user.
+
+    The client must set the Content-Type header to application/json, otherwise
+    get_json() returns None. The request must contain an email and password
+    fields, e.g., {email: "john@gmail.com", password: "password"}, both of
+    which are strings.
+
+    :return
+        A json object of the form {success: bool}, where success is true if
+        the user was able to get logged in, or false otherwise. If success
+        is false, then json object will contain a string field, error, with
+        a description of the error, e.g.,
+        { success: false, error: "email does not exist"}. If the login is
+        successful, then the HTTP response will contain a cookie which
+        the client must send in subsequent requests.
+    '''
+    if get_session_email(SESSION_COOKIE):
+        # return success = true
+        return jsonify(SUCCESS_LOGIN)
+    data = request.get_json()
+    if not data:
+        return gen_error_msg('Bad request or ill-formed json')
+        # return success = false
+    email = data.get('email')
+    if not email:
+        return gen_error_msg('Cannot login without email')
+    password = data.get('password')
+    if not password:
+        return gen_error_msg('Cannot login without password')
+    user = session.query(User).get(email)
+    if not user:
+        return gen_error_msg('Do not recognize email')
+    hsh = get_hash(user.salt, password)
+    if hsh != user.pwdhsh:
+        return gen_error_msg('The password is incorrect.')
+    flask_session[SESSION_COOKIE] = email
+    return jsonify(SUCCESS_LOGIN)
 
 
 CLIENT_ID = json.loads(open('client_secret.json').read())['web']['client_id']
@@ -325,7 +374,7 @@ def json_getitem(item_id):
     item = session.query(Item).get(item_id)
     if not item:
         raise AppErr('Item not found.')
-    return json.dumps({'item': item.to_dict()})
+    return jsonify({'item': item.to_dict()})
 
 
 @app.route('/item/<int:item_id>/edit', methods=['GET', 'POST'])
