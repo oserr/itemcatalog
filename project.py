@@ -343,6 +343,50 @@ def register():
     return redirect('/')
 
 
+SUCCESS_REGISTER = SUCCESS_LOGIN
+
+@app.route('/json/register', methods=['POST'])
+def json_register():
+    '''JSON API endpoint to register a user.
+
+    The client must set the Content-Type header to application/json, otherwise
+    get_json() returns None. The request must contain an email and password
+    fields, e.g., {email: "john@gmail.com", password: "password"}, both of
+    which are strings.
+
+    :return
+        A json object of the form {success: bool}, where success is true if
+        the user was able to register, or false otherwise. If success
+        is false, then json object will contain a string field, error, with
+        a description of the error, e.g.,
+        { success: false, error: "email already exist"}. If the registration
+        is successful, then the HTTP response will contain a cookie which
+        the client must send in subsequent requests that require a user to
+        be logged in.
+    '''
+    if get_session_email(SESSION_COOKIE):
+        return jsonify(SUCCESS_REGISTER)
+    data = request.get_json()
+    if not data:
+        return gen_error_msg('Bad request or ill-formed json')
+    email = data.get('email')
+    if not email:
+        return gen_error_msg('Cannot register without an email')
+    password = data.get('password')
+    if not password:
+        return gen_error_msg('Cannot register without a password')
+    user = session.query(User).get(email)
+    if user:
+        return gen_error_msg('An account already exists for this email')
+    salt = gensalt()
+    hsh = get_hash(salt, password)
+    user = User(email=email, salt=salt, pwdhsh=hsh)
+    session.add(user)
+    session.commit()
+    flask_session[SESSION_COOKIE] = email
+    return jsonify(SUCCESS_REGISTER)
+
+
 @app.route('/newitem', methods=['GET', 'POST'])
 def newitem():
     '''Lets a user a create a new item for a given category.'''
