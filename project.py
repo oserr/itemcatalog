@@ -253,7 +253,7 @@ SUCCESS_LOGIN = {'success': True}
 
 def gen_error_msg(msg):
     ''' Return a json response with a failure message.'''
-    return jsonify({'success': false, 'error': msg})
+    return jsonify({'success': False, 'error': msg})
 
 
 @app.route('/json/login', methods=['POST'])
@@ -280,7 +280,6 @@ def json_login():
     data = request.get_json()
     if not data:
         return gen_error_msg('Bad request or ill-formed json')
-        # return success = false
     email = data.get('email')
     if not email:
         return gen_error_msg('Cannot login without email')
