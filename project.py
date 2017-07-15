@@ -123,9 +123,7 @@ def get_item_fields():
     '''Gets the fields from a form to edit or create an item.
 
     :return
-        An ItemFields with the values to create or update an Item. If the user
-        is also creating a new category, then ItemField.category will contain
-        the new category, otherwise it is None,
+        An ItemFields with the values to create or update an Item.
     '''
     title = request.form.get('title')
     if not title:
