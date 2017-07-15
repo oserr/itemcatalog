@@ -213,7 +213,11 @@ def json_get_category_items(category_id):
 
 @app.route('/logout')
 def logout():
-    '''Logs out a user by removing the cookie associated with a session.'''
+    '''Logs out a user by removing the cookie associated with a session.
+    
+    If a user is not logged in then nothing happens. User is redirected to
+    main page.
+    '''
     flask_session.pop(SESSION_COOKIE, None)
     return redirect('/')
 
