@@ -21,7 +21,7 @@
         <p>{{ item.category_name }}</p>
       </div>
     </div>
-    {% if email == item.email %}
+    {% if email == item.user_email %}
     <div class="row">
       <div class="col-md-12">
         <a class="btn btn-default" href="/item/{{ item.id }}/edit" role="button">Edit</a>
