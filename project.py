@@ -5,9 +5,12 @@ import hmac
 import string
 import random
 from oauth2client import client as auth_client
-from flask import (Flask, render_template,
-                   request, redirect, url_for, flash,
-                   send_from_directory)
+from flask import Flask
+from flask import render_template
+from flask import request
+from flask import redirect
+from flask import url_for
+from flask import send_from_directory
 from flask.json import jsonify
 from flask import session as flask_session
 from sqlalchemy import create_engine
