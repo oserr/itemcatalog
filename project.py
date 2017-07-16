@@ -469,6 +469,41 @@ def edit_item(item_id):
     return redirect('/')
 
 
+@app.route('/json/edit', methods=['POST'])
+def json_edit_item():
+    '''API endpoint for users to edit items.
+
+    A user must own an item, and must be logged in, to be able to modify it.
+    The JSON request must contain the following fields: item_id, title,
+    description, and category. Optionally, if category is other, then it must
+    also contain newcategory. On failure, success is set to false and error
+    contains a failure description. On success, the success field is set to
+    true and the item is embedded in the response. Not that a request that
+    does not modify the item is treated like a success.
+    '''
+    email = get_session_email(SESSION_COOKIE)
+    if not email:
+        return gen_error_msg('Must be logged in to edit an item')
+    data = request.get_json()
+    item_id = data.get('item_id')
+    if not item_id:
+        return gen_error_msg('Must provide the id of the item to update')
+    item = session.query(Item).get(item_id)
+    if not item:
+        return gen_error_msg('Item with id {} not found'.format(item_id))
+    user = session.query(User).get(email)
+    if not user:
+        return gen_error_msg('Must create account to be able to edit items')
+    if item.user != user:
+        return gen_error_msg('To edit, user must own item')
+    try:
+        item_fields = get_item_fields(data, create_mode=False)
+    except AppErr as err:
+        return gen_error_msg(str(err))
+    item_fields.update_item(item)
+    return jsonify({'success': True, 'item': item.to_dict()})
+
+
 @app.route('/item/<int:item_id>/delete', methods=['GET', 'POST'])
 def delete_item(item_id):
     '''Allows a user a who owns an item to delete the item.'''
