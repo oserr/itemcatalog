@@ -534,6 +534,38 @@ def delete_item(item_id):
     return redirect('/')
 
 
+@app.route('/json/delete', methods=['POST'])
+def json_delete_item():
+    '''API endpoint to delete an item.
+
+    Before creating an item, a user must log in to obtain a session cookie,
+    which should be included in the request Cookie header. The json request
+    must contain the ID of the item in field item_id. On success, the success
+    field will be set to true. On failure, the success field will be set to
+    false and the error field will contain a description of the error.
+    '''
+    email = get_session_email(SESSION_COOKIE)
+    if not email:
+        return gen_error_msg('Must be logged in to delete an item')
+    data = request.get_json()
+    item_id = data.get('item_id')
+    if not item_id:
+        return gen_error_msg('Cannot delete item without item ID')
+    item = session.query(Item).get(item_id)
+    if not item:
+        return gen_error_msg('Item not found')
+    user = session.query(User).get(email)
+    if not user:
+        return gen_error_msg('Must create account to be able to edit items')
+    if item.user != user:
+        return gen_error_msg('To delete, user must own item')
+    cat = item.category_name
+    session.query(Item).filter(Item.id == item.id).delete()
+    if not get_category_count(cat):
+        delete_category(cat)
+    return jsonify({'success': True})
+
+
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
     app.debug = True
