@@ -170,14 +170,25 @@ def get_item_fields(data, create_mode=True):
     return ItemFields(title, description, cat_name, category)
 
 
+def gen_error_msg(msg):
+    '''Return a json response with a failure message.'''
+    return jsonify({'success': False, 'error': msg})
+
+
+# Create and setup the DB
 engine = create_engine('sqlite:///catalog.db')
 Base.metadata.bind = engine
-
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+# Create the Flask application
 app = Flask(__name__, static_url_path='')
+
+# Global variables/definitions
 SESSION_COOKIE='email'
+SUCCESS_LOGIN = {'success': True}
+SUCCESS_REGISTER = SUCCESS_LOGIN
+CLIENT_ID = json.loads(open('client_secret.json').read())['web']['client_id']
 
 @app.route('/')
 @app.route('/items')
@@ -260,13 +271,6 @@ def login():
     return redirect('/')
 
 
-SUCCESS_LOGIN = {'success': True}
-
-def gen_error_msg(msg):
-    ''' Return a json response with a failure message.'''
-    return jsonify({'success': False, 'error': msg})
-
-
 @app.route('/json/login', methods=['POST'])
 def json_login():
     '''JSON API endpoint to login a user.
@@ -306,8 +310,6 @@ def json_login():
     flask_session[SESSION_COOKIE] = email
     return jsonify(SUCCESS_LOGIN)
 
-
-CLIENT_ID = json.loads(open('client_secret.json').read())['web']['client_id']
 
 @app.route('/glogin', methods=['POST'])
 def glogin():
@@ -353,8 +355,6 @@ def register():
     flask_session[SESSION_COOKIE] = email
     return redirect('/')
 
-
-SUCCESS_REGISTER = SUCCESS_LOGIN
 
 @app.route('/json/register', methods=['POST'])
 def json_register():
