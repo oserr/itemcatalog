@@ -455,7 +455,13 @@ def json_getitem(item_id):
 
 @app.route('/item/<int:item_id>/edit', methods=['GET', 'POST'])
 def edit_item(item_id):
-    '''Allows a user who owns an item to edit the data for for it.'''
+    '''Allows a user who owns an item to edit its data.
+
+    The user must own, and be logged in, to be able to edit an item. Everything
+    about an item can be changed, except the item ID, which is used internally
+    by the server. If an item is updated successfully, then user is redirected
+    to main page.
+    '''
     email = get_session_email(SESSION_COOKIE)
     if not email:
         raise AppErr('Must be logged in to edit an item')
