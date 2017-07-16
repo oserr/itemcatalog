@@ -220,7 +220,7 @@ def json_get_category_items(category_id):
 @app.route('/logout')
 def logout():
     '''Logs out a user by removing the cookie associated with a session.
-    
+
     If a user is not logged in then nothing happens. User is redirected to
     main page.
     '''
@@ -404,6 +404,23 @@ def newitem():
     user = session.query(User).get(flask_session[SESSION_COOKIE])
     item_fields.create_item(user)
     return redirect('/')
+
+
+@app.route('/json/newitem', methods=['POST'])
+def json_newitem():
+    '''API endpoint for creating a new item
+
+    Before creating an item, a user must log in.
+    .'''
+    if not get_session_email(SESSION_COOKIE):
+        return gen_error_msg('You need to log in to create an item.')
+    try:
+        item_fields = get_item_fields(request.get_json())
+    except AppErr as err:
+        return gen_error_msg(err)
+    user = session.query(User).get(flask_session[SESSION_COOKIE])
+    item = item_fields.create_item(user)
+    return jsonify({'success': True, 'item': item.to_dict()})
 
 
 @app.route('/item/<int:item_id>')
