@@ -92,7 +92,7 @@ class ItemFields:
             user=user)
         session.add(item)
         session.commit()
-        session.refresh()
+        session.refresh(item)
         return item
 
     def update_item(self, item):
@@ -420,7 +420,7 @@ def json_newitem():
     try:
         item_fields = get_item_fields(request.get_json())
     except AppErr as err:
-        return gen_error_msg(err)
+        return gen_error_msg(str(err))
     user = session.query(User).get(flask_session[SESSION_COOKIE])
     item = item_fields.create_item(user)
     return jsonify({'success': True, 'item': item.to_dict()})
