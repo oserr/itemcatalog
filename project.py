@@ -411,10 +411,17 @@ def newitem():
 
 @app.route('/json/newitem', methods=['POST'])
 def json_newitem():
-    '''API endpoint for creating a new item
+    '''API endpoint for creating a new item.
 
-    Before creating an item, a user must log in.
-    .'''
+    Before creating an item, a user must log in to obtain a session cookie,
+    which should be included in the request Cookie header. The json request
+    must contain the following fields: title, description, and category.
+    Optionally, if the user is creating a new category, then the category
+    field must be set to other and the newcategory field must contain the new
+    category name. On success, the success field will be set to true and the
+    item field will contain the new item. On failure, the success field will be
+    set to false and the error field will contain a description of the error.
+    '''
     if not get_session_email(SESSION_COOKIE):
         return gen_error_msg('You need to log in to create an item.')
     try:
