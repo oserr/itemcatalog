@@ -120,26 +120,33 @@ class AppErr(Exception):
     pass
 
 
-def get_item_fields():
-    '''Gets the fields from a form to edit or create an item.
+def get_item_fields(data):
+    '''Gets the fields from a dictionary to create a new Item.
 
+    Extracts the title, description, and category name to create or update
+    an Item.
+
+    :param data
+        A dictionary containing the fields.
     :return
         An ItemFields with the values to create or update an Item.
     '''
-    title = request.form.get('title')
+    if not data:
+        raise AppErr('Missing fields data')
+    title = data.get('title')
     if not title:
         raise AppErr('The item must have a name.')
     title = title.lower()
-    description = request.form.get('description')
+    description = data.get('description')
     if not description:
         raise AppErr('The item must have a description.')
-    cat_name = request.form.get('category')
+    cat_name = data.get('category')
     category = None
     if not cat_name:
         raise AppErr('The item must have a category')
     cat_name = cat_name.lower()
     if cat_name == 'other':
-        cat_name = request.form.get('newcategory')
+        cat_name = data.get('newcategory')
         if not cat_name:
             raise AppErr('New category name must be something.')
         cat_name = cat_name.lower()
