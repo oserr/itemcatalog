@@ -120,7 +120,7 @@ class AppErr(Exception):
     pass
 
 
-def get_item_fields(data):
+def get_item_fields(data, create_mode=True):
     '''Gets the fields from a dictionary to create a new Item.
 
     Extracts the title, description, and category name to create or update
@@ -160,7 +160,7 @@ def get_item_fields(data):
         if not category:
             raise AppErr('Category {} does not exist.'.format(cat_name))
         item = session.query(Item).filter(Item.name == title).first()
-        if item and item.category == category:
+        if create_mode and item and item.category == category:
             raise AppErr('Item {} already exists for category {}.' \
                 .format(title, category.name))
     return ItemFields(title, description, cat_name, category)
@@ -446,7 +446,7 @@ def edit_item(item_id):
             .filter(Category.name != item.category_name).all())
         return render_template('newitem.html',
             item=item, categories=categories, email=email)
-    item_fields = get_item_fields(request.form)
+    item_fields = get_item_fields(request.form, create_mode=False)
     item_fields.update_item(item)
     return redirect('/')
 
