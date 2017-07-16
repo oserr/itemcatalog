@@ -402,7 +402,7 @@ def newitem():
     categories = session.query(Category).all()
     if request.method == 'GET':
         return render_template('newitem.html', categories=categories)
-    item_fields = get_item_fields()
+    item_fields = get_item_fields(request.form)
     user = session.query(User).get(flask_session[SESSION_COOKIE])
     item_fields.create_item(user)
     return redirect('/')
@@ -446,7 +446,7 @@ def edit_item(item_id):
             .filter(Category.name != item.category_name).all())
         return render_template('newitem.html',
             item=item, categories=categories, email=email)
-    item_fields = get_item_fields()
+    item_fields = get_item_fields(request.form)
     item_fields.update_item(item)
     return redirect('/')
 
