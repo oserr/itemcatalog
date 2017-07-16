@@ -186,8 +186,7 @@ app = Flask(__name__, static_url_path='')
 
 # Global variables/definitions
 SESSION_COOKIE='email'
-SUCCESS_LOGIN = {'success': True}
-SUCCESS_REGISTER = SUCCESS_LOGIN
+SUCCESS_JSON = {'success': True}
 CLIENT_ID = json.loads(open('client_secret.json').read())['web']['client_id']
 
 @app.route('/')
@@ -290,8 +289,7 @@ def json_login():
         the client must send in subsequent requests.
     '''
     if get_session_email(SESSION_COOKIE):
-        # return success = true
-        return jsonify(SUCCESS_LOGIN)
+        return jsonify(SUCCESS_JSON)
     data = request.get_json()
     if not data:
         return gen_error_msg('Bad request or ill-formed json')
@@ -308,7 +306,7 @@ def json_login():
     if hsh != user.pwdhsh:
         return gen_error_msg('The password is incorrect.')
     flask_session[SESSION_COOKIE] = email
-    return jsonify(SUCCESS_LOGIN)
+    return jsonify(SUCCESS_JSON)
 
 
 @app.route('/glogin', methods=['POST'])
@@ -376,7 +374,7 @@ def json_register():
         be logged in.
     '''
     if get_session_email(SESSION_COOKIE):
-        return jsonify(SUCCESS_REGISTER)
+        return jsonify(SUCCESS_JSON)
     data = request.get_json()
     if not data:
         return gen_error_msg('Bad request or ill-formed json')
@@ -395,7 +393,7 @@ def json_register():
     session.add(user)
     session.commit()
     flask_session[SESSION_COOKIE] = email
-    return jsonify(SUCCESS_REGISTER)
+    return jsonify(SUCCESS_JSON)
 
 
 @app.route('/newitem', methods=['GET', 'POST'])
@@ -566,7 +564,7 @@ def json_delete_item():
     session.query(Item).filter(Item.id == item.id).delete()
     if not get_category_count(cat):
         delete_category(cat)
-    return jsonify({'success': True})
+    return jsonify(SUCCESS_JSON)
 
 
 if __name__ == '__main__':
