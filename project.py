@@ -95,8 +95,6 @@ class ItemFields:
 
     def update_item(self, item):
         '''Update an item if any of the fields have changed.'''
-        if not user:
-            raise ValueError('User cannot be null')
         if item.category_name != self.category_name and not category:
             self.create_category()
         if item.name != self.name or item.description != self.description \
