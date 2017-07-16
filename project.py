@@ -92,6 +92,8 @@ class ItemFields:
             user=user)
         session.add(item)
         session.commit()
+        session.refresh()
+        return item
 
     def update_item(self, item):
         '''Update an item if any of the fields have changed.'''
@@ -105,6 +107,7 @@ class ItemFields:
             item.category = self.category
             session.add(item)
             session.commit()
+        return item
 
     def create_category(self):
         '''Creates a new category and sets its category field.'''
