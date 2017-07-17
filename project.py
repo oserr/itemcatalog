@@ -89,14 +89,27 @@ AUTH_ERR_MSG = 'Coult not verify your access level for %s. You have to log in.'
 ACCT_ERR_MSG = 'Could not find your account. You have to create an account.'
 
 def requires_auth(err_func):
+    '''Decorator function to pass in argument to decorated function.
+
+    :param err_func
+        A function that creates json or html error objects.
+    '''
     def wrapper(func):
-        '''Returns a decorator function that verifies a user is logged in.'''
+        '''Creates a decorated function.
+
+        :param func
+            The decorated function
+        '''
         @functools.wraps(func)
         def decorated(*args, **kwargs):
+            '''Enforces that a user exists and is logged in.
+
+            If a user is logged in, then we add the user to the application
+            context, otherwise we send back a 401 response.
+            '''
             email = get_session_email(SESSION_COOKIE)
             if not email:
-                err = AUTH_ERR_MSG % request.base_url
-                content = err_func(err)
+                content = err_func(AUTH_ERR_MSG % request.base_url)
                 response = make_response(content, 401)
                 response.headers['WWW-Authenticate'] = \
                     'Basic realm="Login Required"'
