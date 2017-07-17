@@ -506,6 +506,7 @@ def json_getitem(item_id):
 
 
 @app.route('/item/<int:item_id>/edit', methods=['GET', 'POST'])
+@requires_auth
 def edit_item(item_id):
     '''Allows a user who owns an item to edit its data.
 
@@ -514,16 +515,10 @@ def edit_item(item_id):
     by the server. If an item is updated successfully, then user is redirected
     to main page.
     '''
-    email = get_session_email(SESSION_COOKIE)
-    if not email:
-        raise AppErr('Must be logged in to edit an item')
     item = session.query(Item).get(item_id)
     if not item:
         raise AppErr('Item not found.')
-    user = session.query(User).get(email)
-    if not user:
-        raise AppErr('Must create account to be able to edit items.')
-    if item.user != user:
+    if item.user != g.user:
         raise AppErr('To edit, user must own item')
     if request.method == 'GET':
         categories = (session.query(Category)
