@@ -561,18 +561,13 @@ def json_edit_item():
 
 
 @app.route('/item/<int:item_id>/delete', methods=['GET', 'POST'])
+@requires_auth
 def delete_item(item_id):
     '''Allows a user a who owns an item to delete the item.'''
-    email = get_session_email(SESSION_COOKIE)
-    if not email:
-        raise AppErr('Must be logged in to delete an item.')
     item = session.query(Item).get(item_id)
     if not item:
         raise AppErr('Item not found.')
-    user = session.query(User).get(email)
-    if not user:
-        raise AppErr('Must create account to be able to edit items.')
-    if item.user != user:
+    if item.user != g.user:
         raise AppErr('To delete, user must own item')
     if request.method == 'GET':
         return render_template('item_delete.html', item=item)
