@@ -61,6 +61,17 @@ def get_session_email(cookie):
     return flask_session.get(cookie)
 
 
+def make_html_err(err):
+    '''Render the html error page.
+
+    :param err
+        The error message.
+    :return
+        A string representing the HTML page.
+    '''
+    return render_template('err.html', err=err)
+
+
 AUTH_ERR_MSG = 'Coult not verify your access level for %s. You have to log in.'
 ACCT_ERR_MSG = 'Could not find your account. You have to create an account.'
 
