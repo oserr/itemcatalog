@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # project.py
+import functools
 import json
 import hmac
 import string
@@ -13,6 +14,7 @@ from flask import url_for
 from flask import send_from_directory
 from flask import session as flask_session
 from flask import g
+from flask import make_response
 from flask.json import jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -57,6 +59,32 @@ def get_session_email(cookie):
         The name of the cookie for the email
     '''
     return flask_session.get(cookie)
+
+
+AUTH_ERR_MSG = 'Coult not verify your access level for {}. You have to log in.'
+ACCT_ERR_MSG = 'Could not find your account. You have to create an account.'
+
+def requires_auth(func):
+    '''Returns a decorator function that verifies a user is logged in.'''
+    @functools.wraps(func)
+    def decorated(*args, **kwargs):
+        email = get_session_email(SESSION_COOKIE)
+        if not email:
+            html = render_template('err.html', AUTH_ERR_MSG % request.base_url)
+            response = make_response(html, 401)
+            response.headers['WWW-Authenticate'] = \
+                'Basic realm="Login Required"'
+            return response
+        user = session.query(User).get(email)
+        if not user:
+            html = render_template('err.html', ACCT_ERR_MSG)
+            response = make_response(html, 401)
+            response.headers['WWW-Authenticate'] = \
+                'Basic realm="Account Required"'
+            return response
+        g.user = user
+        return func(*args, **kwargs)
+    return decorated
 
 
 def get_category_count(category):
