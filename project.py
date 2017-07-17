@@ -61,7 +61,7 @@ def get_session_email(cookie):
     return flask_session.get(cookie)
 
 
-AUTH_ERR_MSG = 'Coult not verify your access level for {}. You have to log in.'
+AUTH_ERR_MSG = 'Coult not verify your access level for %s. You have to log in.'
 ACCT_ERR_MSG = 'Could not find your account. You have to create an account.'
 
 def requires_auth(func):
@@ -70,14 +70,15 @@ def requires_auth(func):
     def decorated(*args, **kwargs):
         email = get_session_email(SESSION_COOKIE)
         if not email:
-            html = render_template('err.html', AUTH_ERR_MSG % request.base_url)
+            err = AUTH_ERR_MSG % request.base_url
+            html = render_template('err.html', err=err)
             response = make_response(html, 401)
             response.headers['WWW-Authenticate'] = \
                 'Basic realm="Login Required"'
             return response
         user = session.query(User).get(email)
         if not user:
-            html = render_template('err.html', ACCT_ERR_MSG)
+            html = render_template('err.html', err=ACCT_ERR_MSG)
             response = make_response(html, 401)
             response.headers['WWW-Authenticate'] = \
                 'Basic realm="Account Required"'
