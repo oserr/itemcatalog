@@ -72,7 +72,7 @@ def make_html_err(err):
     return render_template('err.html', err=err)
 
 
-def gen_error_msg(msg):
+def make_json_err(msg):
     '''Creates a json error object.
 
     :param msg
@@ -123,14 +123,14 @@ def json_requires_auth(func):
         email = get_session_email(SESSION_COOKIE)
         if not email:
             err = AUTH_ERR_MSG % request.base_url
-            response = gen_error_msg(err)
+            response = make_json_err(err)
             response.status_code = 401
             response.headers['WWW-Authenticate'] = \
                 'Basic realm="Login Required"'
             return response
         user = session.query(User).get(email)
         if not user:
-            response = gen_error_msg(ACCT_ERR_MSG)
+            response = make_json_err(ACCT_ERR_MSG)
             response.status_code = 401
             response.headers['WWW-Authenticate'] = \
                 'Basic realm="Account Required"'
@@ -369,19 +369,19 @@ def json_login():
         return jsonify(SUCCESS_JSON)
     data = request.get_json()
     if not data:
-        return gen_error_msg('Bad request or ill-formed json')
+        return make_json_err('Bad request or ill-formed json')
     email = data.get('email')
     if not email:
-        return gen_error_msg('Cannot login without email')
+        return make_json_err('Cannot login without email')
     password = data.get('password')
     if not password:
-        return gen_error_msg('Cannot login without password')
+        return make_json_err('Cannot login without password')
     user = session.query(User).get(email)
     if not user:
-        return gen_error_msg('Do not recognize email')
+        return make_json_err('Do not recognize email')
     hsh = get_hash(user.salt, password)
     if hsh != user.pwdhsh:
-        return gen_error_msg('The password is incorrect.')
+        return make_json_err('The password is incorrect.')
     flask_session[SESSION_COOKIE] = email
     return jsonify(SUCCESS_JSON)
 
@@ -454,16 +454,16 @@ def json_register():
         return jsonify(SUCCESS_JSON)
     data = request.get_json()
     if not data:
-        return gen_error_msg('Bad request or ill-formed json')
+        return make_json_err('Bad request or ill-formed json')
     email = data.get('email')
     if not email:
-        return gen_error_msg('Cannot register without an email')
+        return make_json_err('Cannot register without an email')
     password = data.get('password')
     if not password:
-        return gen_error_msg('Cannot register without a password')
+        return make_json_err('Cannot register without a password')
     user = session.query(User).get(email)
     if user:
-        return gen_error_msg('An account already exists for this email')
+        return make_json_err('An account already exists for this email')
     salt = gensalt()
     hsh = get_hash(salt, password)
     user = User(email=email, salt=salt, pwdhsh=hsh)
@@ -502,7 +502,7 @@ def json_newitem():
     try:
         item_fields = get_item_fields(request.get_json())
     except AppErr as err:
-        return gen_error_msg(str(err))
+        return make_json_err(str(err))
     item = item_fields.create_item(g.user)
     return jsonify({'success': True, 'item': item.to_dict()})
 
@@ -567,16 +567,16 @@ def json_edit_item():
     data = request.get_json()
     item_id = data.get('item_id')
     if not item_id:
-        return gen_error_msg('Must provide the id of the item to update')
+        return make_json_err('Must provide the id of the item to update')
     item = session.query(Item).get(item_id)
     if not item:
-        return gen_error_msg('Item with id {} not found'.format(item_id))
+        return make_json_err('Item with id {} not found'.format(item_id))
     if item.user != g.user:
-        return gen_error_msg('To edit, user must own item')
+        return make_json_err('To edit, user must own item')
     try:
         item_fields = get_item_fields(data, create_mode=False)
     except AppErr as err:
-        return gen_error_msg(str(err))
+        return make_json_err(str(err))
     item_fields.update_item(item)
     return jsonify({'success': True, 'item': item.to_dict()})
 
@@ -613,12 +613,12 @@ def json_delete_item():
     data = request.get_json()
     item_id = data.get('item_id')
     if not item_id:
-        return gen_error_msg('Cannot delete item without item ID')
+        return make_json_err('Cannot delete item without item ID')
     item = session.query(Item).get(item_id)
     if not item:
-        return gen_error_msg('Item not found')
+        return make_json_err('Item not found')
     if item.user != g.user:
-        return gen_error_msg('To delete, user must own item')
+        return make_json_err('To delete, user must own item')
     cat = item.category_name
     session.query(Item).filter(Item.id == item.id).delete()
     if not get_category_count(cat):
