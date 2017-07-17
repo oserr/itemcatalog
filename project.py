@@ -72,6 +72,19 @@ def make_html_err(err):
     return render_template('err.html', err=err)
 
 
+def gen_error_msg(msg):
+    '''Creates a json error object.
+
+    :param msg
+        The error message
+    :return
+        A json object with the following fields
+        - success: true or false
+        - error: the error message
+    '''
+    return jsonify({'success': False, 'error': msg})
+
+
 AUTH_ERR_MSG = 'Coult not verify your access level for %s. You have to log in.'
 ACCT_ERR_MSG = 'Could not find your account. You have to create an account.'
 
@@ -235,11 +248,6 @@ def get_item_fields(data, create_mode=True):
             raise AppErr('Item {} already exists for category {}.' \
                 .format(title, category.name))
     return ItemFields(title, description, cat_name, category)
-
-
-def gen_error_msg(msg):
-    '''Return a json response with a failure message.'''
-    return jsonify({'success': False, 'error': msg})
 
 
 # Create and setup the DB
