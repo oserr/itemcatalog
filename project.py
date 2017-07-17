@@ -465,6 +465,7 @@ def newitem():
 
 
 @app.route('/json/newitem', methods=['POST'])
+@json_requires_auth
 def json_newitem():
     '''API endpoint for creating a new item.
 
@@ -477,14 +478,11 @@ def json_newitem():
     item field will contain the new item. On failure, the success field will be
     set to false and the error field will contain a description of the error.
     '''
-    if not get_session_email(SESSION_COOKIE):
-        return gen_error_msg('You need to log in to create an item.')
     try:
         item_fields = get_item_fields(request.get_json())
     except AppErr as err:
         return gen_error_msg(str(err))
-    user = session.query(User).get(flask_session[SESSION_COOKIE])
-    item = item_fields.create_item(user)
+    item = item_fields.create_item(g.user)
     return jsonify({'success': True, 'item': item.to_dict()})
 
 
