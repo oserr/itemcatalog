@@ -114,32 +114,6 @@ def requires_auth(err_func):
     return wrapper
 
 
-def json_requires_auth(func):
-    '''Returns a decorator function that verifies a user is logged in for
-    requests made via json API.
-    '''
-    @functools.wraps(func)
-    def decorated(*args, **kwargs):
-        email = get_session_email(SESSION_COOKIE)
-        if not email:
-            err = AUTH_ERR_MSG % request.base_url
-            response = make_json_err(err)
-            response.status_code = 401
-            response.headers['WWW-Authenticate'] = \
-                'Basic realm="Login Required"'
-            return response
-        user = session.query(User).get(email)
-        if not user:
-            response = make_json_err(ACCT_ERR_MSG)
-            response.status_code = 401
-            response.headers['WWW-Authenticate'] = \
-                'Basic realm="Account Required"'
-            return response
-        g.user = user
-        return func(*args, **kwargs)
-    return decorated
-
-
 def get_category_count(category):
     '''Return the number of items that are part of a given category.'''
     return session.query(Item).filter(Item.category_name == category).count()
@@ -486,7 +460,7 @@ def newitem():
 
 
 @app.route('/json/newitem', methods=['POST'])
-@json_requires_auth
+@requires_auth(make_json_err)
 def json_newitem():
     '''API endpoint for creating a new item.
 
@@ -552,7 +526,7 @@ def edit_item(item_id):
 
 
 @app.route('/json/edit', methods=['POST'])
-@json_requires_auth
+@requires_auth(make_json_err)
 def json_edit_item():
     '''API endpoint for users to edit items.
 
@@ -600,7 +574,7 @@ def delete_item(item_id):
 
 
 @app.route('/json/delete', methods=['POST'])
-@json_requires_auth
+@requires_auth(make_json_err)
 def json_delete_item():
     '''API endpoint to delete an item.
 
