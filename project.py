@@ -531,6 +531,7 @@ def edit_item(item_id):
 
 
 @app.route('/json/edit', methods=['POST'])
+@json_requires_auth
 def json_edit_item():
     '''API endpoint for users to edit items.
 
@@ -542,9 +543,6 @@ def json_edit_item():
     true and the item is embedded in the response. Not that a request that
     does not modify the item is treated like a success.
     '''
-    email = get_session_email(SESSION_COOKIE)
-    if not email:
-        return gen_error_msg('Must be logged in to edit an item')
     data = request.get_json()
     item_id = data.get('item_id')
     if not item_id:
@@ -552,10 +550,7 @@ def json_edit_item():
     item = session.query(Item).get(item_id)
     if not item:
         return gen_error_msg('Item with id {} not found'.format(item_id))
-    user = session.query(User).get(email)
-    if not user:
-        return gen_error_msg('Must create account to be able to edit items')
-    if item.user != user:
+    if item.user != g.user:
         return gen_error_msg('To edit, user must own item')
     try:
         item_fields = get_item_fields(data, create_mode=False)
