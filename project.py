@@ -12,6 +12,7 @@ from flask import redirect
 from flask import url_for
 from flask import send_from_directory
 from flask import session as flask_session
+from flask import g
 from flask.json import jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
