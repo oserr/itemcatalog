@@ -426,16 +426,14 @@ def json_register():
 
 
 @app.route('/newitem', methods=['GET', 'POST'])
+@requires_auth
 def newitem():
     '''Lets a user a create a new item for a given category.'''
-    if not get_session_email(SESSION_COOKIE):
-        raise AppErr('You need to log in to create an item.')
     categories = session.query(Category).all()
     if request.method == 'GET':
         return render_template('newitem.html', categories=categories)
     item_fields = get_item_fields(request.form)
-    user = session.query(User).get(flask_session[SESSION_COOKIE])
-    item_fields.create_item(user)
+    item_fields.create_item(g.user)
     return redirect('/')
 
 
