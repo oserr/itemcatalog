@@ -88,28 +88,30 @@ def gen_error_msg(msg):
 AUTH_ERR_MSG = 'Coult not verify your access level for %s. You have to log in.'
 ACCT_ERR_MSG = 'Could not find your account. You have to create an account.'
 
-def requires_auth(func):
-    '''Returns a decorator function that verifies a user is logged in.'''
-    @functools.wraps(func)
-    def decorated(*args, **kwargs):
-        email = get_session_email(SESSION_COOKIE)
-        if not email:
-            err = AUTH_ERR_MSG % request.base_url
-            html = render_template('err.html', err=err)
-            response = make_response(html, 401)
-            response.headers['WWW-Authenticate'] = \
-                'Basic realm="Login Required"'
-            return response
-        user = session.query(User).get(email)
-        if not user:
-            html = render_template('err.html', err=ACCT_ERR_MSG)
-            response = make_response(html, 401)
-            response.headers['WWW-Authenticate'] = \
-                'Basic realm="Account Required"'
-            return response
-        g.user = user
-        return func(*args, **kwargs)
-    return decorated
+def requires_auth(err_func):
+    def wrapper(func):
+        '''Returns a decorator function that verifies a user is logged in.'''
+        @functools.wraps(func)
+        def decorated(*args, **kwargs):
+            email = get_session_email(SESSION_COOKIE)
+            if not email:
+                err = AUTH_ERR_MSG % request.base_url
+                content = err_func(err)
+                response = make_response(content, 401)
+                response.headers['WWW-Authenticate'] = \
+                    'Basic realm="Login Required"'
+                return response
+            user = session.query(User).get(email)
+            if not user:
+                content = err_func(ACCT_ERR_MSG)
+                response = make_response(content, 401)
+                response.headers['WWW-Authenticate'] = \
+                    'Basic realm="Account Required"'
+                return response
+            g.user = user
+            return func(*args, **kwargs)
+        return decorated
+    return wrapper
 
 
 def json_requires_auth(func):
@@ -472,7 +474,7 @@ def json_register():
 
 
 @app.route('/newitem', methods=['GET', 'POST'])
-@requires_auth
+@requires_auth(make_html_err)
 def newitem():
     '''Lets a user a create a new item for a given category.'''
     categories = session.query(Category).all()
@@ -525,7 +527,7 @@ def json_getitem(item_id):
 
 
 @app.route('/item/<int:item_id>/edit', methods=['GET', 'POST'])
-@requires_auth
+@requires_auth(make_html_err)
 def edit_item(item_id):
     '''Allows a user who owns an item to edit its data.
 
@@ -580,7 +582,7 @@ def json_edit_item():
 
 
 @app.route('/item/<int:item_id>/delete', methods=['GET', 'POST'])
-@requires_auth
+@requires_auth(make_html_err)
 def delete_item(item_id):
     '''Allows a user a who owns an item to delete the item.'''
     item = session.query(Item).get(item_id)
