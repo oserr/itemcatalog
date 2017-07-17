@@ -88,6 +88,32 @@ def requires_auth(func):
     return decorated
 
 
+def json_requires_auth(func):
+    '''Returns a decorator function that verifies a user is logged in for
+    requests made via json API.
+    '''
+    @functools.wraps(func)
+    def decorated(*args, **kwargs):
+        email = get_session_email(SESSION_COOKIE)
+        if not email:
+            err = AUTH_ERR_MSG % request.base_url
+            response = gen_error_msg(err)
+            response.status_code = 401
+            response.headers['WWW-Authenticate'] = \
+                'Basic realm="Login Required"'
+            return response
+        user = session.query(User).get(email)
+        if not user:
+            response = gen_error_msg(ACCT_ERR_MSG)
+            response.status_code = 401
+            response.headers['WWW-Authenticate'] = \
+                'Basic realm="Account Required"'
+            return response
+        g.user = user
+        return func(*args, **kwargs)
+    return decorated
+
+
 def get_category_count(category):
     '''Return the number of items that are part of a given category.'''
     return session.query(Item).filter(Item.category_name == category).count()
