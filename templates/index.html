@@ -16,23 +16,23 @@
     </header>
     <div class="row">
       <div class="col-md-6">
-      <div class="content-box">
-        <h2 class="font-indie-flower">Categories</h2>
-        {% for category in categories %}
-          <p class="font-fresca categories"><a class="category-item-btn" href="/items/{{ category.id }}">{{ category.name }}</a></p>
-        {% endfor %}
-      </div>
+        <div class="content-box">
+          <h2 class="font-indie-flower">Categories</h2>
+          {% for category in categories %}
+            <p class="font-fresca categories"><a class="category-item-btn" href="/items/{{ category.id }}">{{ category.name }}</a></p>
+          {% endfor %}
+        </div>
       </div>
       <div class="col-md-6">
-      <div class="content-box">
-        <h2 class="font-gloria-hallelujah">Items</h2>
-        {% if email %}
-          <h6 class="font-roboto-mono"><a class="new-item-btn" href="/newitem" role="button">New Item</a></h6>
-        {% endif %}
-        {% for item in items %}
-          <p class="font-dosis items"><a class="category-item-btn" href="/item/{{ item.id }}">{{ item.name }}</a></p>
-        {% endfor %}
-      </div>
+        <div class="content-box">
+          <h2 class="font-gloria-hallelujah">Items</h2>
+          {% if email %}
+            <h6 class="font-roboto-mono"><a class="new-item-btn" href="/newitem" role="button">New Item</a></h6>
+          {% endif %}
+          {% for item in items %}
+            <p class="font-dosis items"><a class="category-item-btn" href="/item/{{ item.id }}">{{ item.name }}</a></p>
+          {% endfor %}
+        </div>
       </div>
     </div>
   </div>
