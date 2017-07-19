@@ -342,7 +342,11 @@ def json_get_category_items(category_id):
         raise AppErr('Category not found.')
     items = [item.to_dict() for item in \
         session.query(Item).filter(Item.category == category).all()]
-    return jsonify({'categories': [category.to_dict()], 'items': items})
+    return jsonify({
+        'success': True,
+        'categories': [category.to_dict()],
+        'items': items
+    })
 
 
 @app.route('/logout')
