@@ -562,10 +562,13 @@ def edit_item():
     by the server. If an item is updated successfully, then user is redirected
     to main page.
 
-    edit_item depends on requires_auth to authenticate the user and to load the
-    user data into the app content (i.e., g), and depends on
-    requires_item_owner to verify that the item exists and is owned by the user
-    making the request.
+    edit_item depends on requires_auth to
+    - authenticate user
+    - load app context g with user
+    and it depnds on requires_item_owner to
+    - verify item exists
+    - verify user owns item
+    - load app context g with item
     '''
     if request.method == 'GET':
         categories = (session.query(Category)
