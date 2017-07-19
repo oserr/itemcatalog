@@ -14,24 +14,27 @@
     </header>
     <form method="post" action="/login" class="login-form">
       <div class="row">
-        <div class="form-group col-xs-6">
+        <div class="form-group col-md-6">
           <label for="input-email">Email</label>
           <input type="email" class="form-control" id="input-email" name="email">
         </div>
       </div>
       <div class="row">
-        <div class="form-group col-xs-6">
+        <div class="form-group col-md-6">
           <label for="input-password">Password</label>
           <input type="password" class="form-control" id="input-password" name="password">
         </div>
       </div>
       <div class="row">
-        <div class="col-xs-6">
+        <div class="col-md-6">
           <button type="submit" class="btn btn-primary">Login</button>
         </div>
       </div>
     </form>
-    <div class="g-signin2" data-scope="openid email" data-onsuccess="onSignIn"></div>
+    <hr>
+    <div class="row">
+      <div class="col-md-6 g-signin2" data-scope="openid email" data-onsuccess="onSignIn"></div>
+    </div>
     <hr>
     <div class="row">
       <div id="register-div" class="col-xs-6">
