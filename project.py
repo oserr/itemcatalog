@@ -577,8 +577,9 @@ def edit_item():
     return redirect('/')
 
 
-@app.route('/json/edit', methods=['POST'])
+@app.route('/json/item/<int:item_id>/edit', methods=['POST'])
 @requires_auth(make_json_err)
+@requires_item_owner(make_json_err)
 def json_edit_item():
     '''API endpoint for users to edit items.
 
@@ -591,20 +592,12 @@ def json_edit_item():
     does not modify the item is treated like a success.
     '''
     data = request.get_json()
-    item_id = data.get('item_id')
-    if not item_id:
-        return make_json_err('Must provide the id of the item to update')
-    item = session.query(Item).get(item_id)
-    if not item:
-        return make_json_err('Item with id {} not found'.format(item_id))
-    if item.user != g.user:
-        return make_json_err('To edit, user must own item')
     try:
         item_fields = get_item_fields(data, create_mode=False)
     except AppErr as err:
         return make_json_err(str(err))
-    item_fields.update_item(item)
-    return jsonify({'success': True, 'item': item.to_dict()})
+    item_fields.update_item(g.item)
+    return jsonify({'success': True, 'item': g.item.to_dict()})
 
 
 @app.route('/item/<int:item_id>/delete', methods=['GET', 'POST'])
