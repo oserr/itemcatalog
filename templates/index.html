@@ -1,5 +1,37 @@
 {% extends "base.html" %}
-{% block head %}{% endblock %}
+{% block head %}
+  <style>
+    body {
+      background: black;
+    }
+
+    .jumbotron {
+      background: #3399ff;
+    }
+
+    .categories {
+      border-width: 10px;
+      border-style: solid;
+      border-color: #003366;
+      border-radius:15px;
+      padding-bottom: 5px;
+      padding-top: 5px;
+      padding-left: 20px;
+      background: #ffcc99;
+    }
+
+    .items {
+      border-radius:15px;
+      border-width: 10px;
+      border-style: solid;
+      border-color: #003366;
+      padding-bottom: 5px;
+      padding-top: 5px;
+      padding-left: 20px;
+      background: #ff9966;
+    }
+  </style>
+{% endblock %}
 {% block content %}
   <div class="container">
     <header class="jumbotron">
@@ -14,13 +46,16 @@
       </p>
     </header>
     <div class="row categories-and-items">
-      <div class="col-md-6 categories">
+      <div class="col-md-6 item-container">
+      <div class="categories">
         <h2>Categories</h2>
         {% for category in categories %}
           <p><a href="/items/{{ category.id }}">{{ category.name }}</a></p>
         {% endfor %}
       </div>
-      <div class="col-md-6 items">
+      </div>
+      <div class="col-md-6 item-container">
+      <div class="items">
         <h2>Items</h2>
         {% if email %}
           <h6><a href="/newitem" role="button">New Item</a></h6>
@@ -28,6 +63,7 @@
         {% for item in items %}
           <p><a href="/item/{{ item.id }}">{{ item.name }}</a></p>
         {% endfor %}
+      </div>
       </div>
     </div>
   </div>
