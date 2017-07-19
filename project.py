@@ -613,17 +613,25 @@ def json_edit_item():
 
 @app.route('/item/<int:item_id>/delete', methods=['GET', 'POST'])
 @requires_auth(make_html_err)
-def delete_item(item_id):
-    '''Allows a user a who owns an item to delete the item.'''
-    item = session.query(Item).get(item_id)
-    if not item:
-        raise AppErr('Item not found.')
-    if item.user != g.user:
-        raise AppErr('To delete, user must own item')
+@requires_item_owner(make_html_err)
+def delete_item():
+    '''Allows a user to delete an item.
+
+    If, after deleting the item, there are no more items pointing to the
+    deleted item's category, then the category is removed from the DB.
+
+    json_edit_item depends on requires_auth to
+    - authenticate user
+    - load app context g with user
+    and it depends on requires_item_owner to
+    - verify item exists
+    - verify user owns item
+    - load app context g with item
+    '''
     if request.method == 'GET':
-        return render_template('item_delete.html', item=item)
-    cat = item.category_name
-    session.query(Item).filter(Item.id == item.id).delete()
+        return render_template('item_delete.html', item=g.item)
+    cat = g.item.category_name
+    session.query(Item).filter(Item.id == g.item.id).delete()
     if not get_category_count(cat):
         delete_category(cat)
     return redirect('/')
