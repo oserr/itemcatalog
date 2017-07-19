@@ -78,3 +78,8 @@ body {
 .bottom-form-neighbor {
   margin-top: 20px;
 }
+
+.form-hints {
+  font-family: 'Roboto Mono', monospace;
+  color: #caffd0;
+}
