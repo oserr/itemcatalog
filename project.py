@@ -637,28 +637,25 @@ def delete_item():
     return redirect('/')
 
 
-@app.route('/json/delete', methods=['POST'])
+@app.route('/json/item/<int:item_id>/delete', methods=['POST'])
 @requires_auth(make_json_err)
+@requires_item_owner(make_json_err)
 def json_delete_item():
-    '''API endpoint to delete an item.
+    '''Allows a user to delete an item via the JSON API endpoint.
 
-    Before creating an item, a user must log in to obtain a session cookie,
-    which should be included in the request Cookie header. The json request
-    must contain the ID of the item in field item_id. On success, the success
-    field will be set to true. On failure, the success field will be set to
-    false and the error field will contain a description of the error.
+    If, after deleting the item, there are no more items pointing to the
+    deleted item's category, then the category is removed from the DB.
+
+    json_edit_item depends on requires_auth to
+    - authenticate user
+    - load app context g with user
+    and it depends on requires_item_owner to
+    - verify item exists
+    - verify user owns item
+    - load app context g with item
     '''
-    data = request.get_json()
-    item_id = data.get('item_id')
-    if not item_id:
-        return make_json_err('Cannot delete item without item ID')
-    item = session.query(Item).get(item_id)
-    if not item:
-        return make_json_err('Item not found')
-    if item.user != g.user:
-        return make_json_err('To delete, user must own item')
-    cat = item.category_name
-    session.query(Item).filter(Item.id == item.id).delete()
+    cat = g.item.category_name
+    session.query(Item).filter(Item.id == g.item.id).delete()
     if not get_category_count(cat):
         delete_category(cat)
     return jsonify(SUCCESS_JSON)
