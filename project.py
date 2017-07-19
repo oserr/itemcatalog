@@ -553,8 +553,9 @@ def json_getitem(item_id):
     '''
     item = session.query(Item).get(item_id)
     if not item:
-        raise AppErr('Item not found.')
-    return jsonify({'item': item.to_dict()})
+        content = make_json_err(ITEM_NOT_FOUND_ERR % item_id)
+        return make_response(content, 404)
+    return jsonify({'success': True, 'item': item.to_dict()})
 
 
 @app.route('/item/<int:item_id>/edit', methods=['GET', 'POST'])
