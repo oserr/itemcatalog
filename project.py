@@ -537,7 +537,8 @@ def getitem(item_id):
     '''Renders a specific item.'''
     item = session.query(Item).get(item_id)
     if not item:
-        raise AppErr('Item not found.')
+        content = make_html_err(ITEM_NOT_FOUND_ERR % item_id)
+        return make_response(content, 404)
     return render_template('item.html',
         email=get_session_email(SESSION_COOKIE), item=item)
 
