@@ -43,6 +43,11 @@
       background: tan;
       font-size: 120%;
     }
+
+    .category-item-btn:hover {
+      font-size: 110%;
+      text-decoration: none;
+    }
   </style>
 {% endblock %}
 {% block content %}
@@ -63,7 +68,7 @@
       <div class="content-box">
         <h2 class="font-indie-flower">Categories</h2>
         {% for category in categories %}
-          <p class="font-fresca"><a href="/items/{{ category.id }}">{{ category.name }}</a></p>
+          <p class="font-fresca"><a class="category-item-btn" href="/items/{{ category.id }}">{{ category.name }}</a></p>
         {% endfor %}
       </div>
       </div>
@@ -74,7 +79,7 @@
           <h6 class="font-roboto-mono"><a href="/newitem" role="button">New Item</a></h6>
         {% endif %}
         {% for item in items %}
-          <p class="font-dosis"><a href="/item/{{ item.id }}">{{ item.name }}</a></p>
+          <p class="font-dosis"><a class="category-item-btn" href="/item/{{ item.id }}">{{ item.name }}</a></p>
         {% endfor %}
       </div>
       </div>
