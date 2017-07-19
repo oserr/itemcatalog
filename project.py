@@ -127,6 +127,44 @@ def requires_auth(err_func):
     return wrapper
 
 
+ITEM_NOT_FOUND_ERR = 'Sorry, but we could not find item with ID %d'
+OWNER_ERR = 'Sorry, but user %s cannot modify item with ID %d'
+
+def requires_item_owner(err_func):
+    '''Decorator function to pass in argument to decorated function.
+
+    :param err_func
+        A function that creates json or html error objects.
+    '''
+    def wrapper(func):
+        '''Creates a decorated function.
+
+        :param func
+            The decorated function
+        '''
+        @functools.wraps(func)
+        def decorated(*args, **kwargs):
+            '''Enforces that a user owns an item before calling the decorated
+            function.
+
+            This function relies on requires_auth authenticating a user and
+            defining g.user, and hence should be closer than requires_auth to
+            the function being decorated.
+            '''
+            item_id = kwargs['item_id']
+            item = session.query(Item).get(item_id)
+            if not item:
+                content = err_func(ITEM_NOT_FOUND_ERR % item_id)
+                return make_response(content, 404)
+            if g.user != item.user:
+                content = err_func(OWNER_ERR % (g.user.email, item_id))
+                return make_response(content, 403)
+            g.item = item
+            return func(*args, **args)
+        return decorated
+    return wrapper
+
+
 def get_category_count(category):
     '''Return the number of items that are part of a given category.'''
     return session.query(Item).filter(Item.category_name == category).count()
