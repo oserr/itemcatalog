@@ -13,6 +13,7 @@
       <h1 class="font-roboto-mono">ItemCatalog</h1>
     </header>
     <form method="post" action="/login" class="login-form">
+      <p>Log in with your email</p>
       <div class="row">
         <div class="form-group col-md-6">
           <label for="input-email">Email</label>
@@ -33,16 +34,17 @@
     </form>
     <hr>
     <div class="row">
+      <p>... or log in with Google</p>
       <div class="col-md-6 g-signin2" data-scope="openid email" data-onsuccess="onSignIn"></div>
     </div>
     <hr>
     <div class="row">
       <div id="register-div" class="col-xs-6">
-        <p>Don't have an account yet?<p>
+        <p>... or create an account<p>
         <a class="btn btn-primary h1" href="/register" role="button">Register</a>
       </div>
       <div id="login-div" class="col-xs-6 hidden">
-        <p>Already have an account?<p>
+        <p>... or log in if you already have an account<p>
         <a class="btn btn-primary h1" href="/login" role="button">Login</a>
       </div>
     </div>

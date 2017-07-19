@@ -38,9 +38,14 @@ body {
   color: #b4a0e5;
 }
 
-.btn {
+.jumbotron a {
   background: #caffd0;
   color: #b4a0e5;
+}
+
+.btn {
+  background: lightblue;
+  color: #ca3cff;
 }
 
 .content-box {
