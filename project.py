@@ -315,7 +315,7 @@ def json_index():
     '''
     categories = [cat.to_dict() for cat in session.query(Category).all()]
     items = [item.to_dict() for item in session.query(Item).all()]
-    response_dict = {'categories': categories, 'items': items}
+    response_dict = {'success': True, 'categories': categories, 'items': items}
     return jsonify(response_dict)
 
 
