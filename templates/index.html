@@ -65,6 +65,10 @@
     .items a {
       color: #0e6251;
     }
+
+    .new-item-btn:hover {
+      text-decoration: none;
+    }
   </style>
 {% endblock %}
 {% block content %}
@@ -93,7 +97,7 @@
       <div class="content-box">
         <h2 class="font-gloria-hallelujah">Items</h2>
         {% if email %}
-          <h6 class="font-roboto-mono"><a href="/newitem" role="button">New Item</a></h6>
+          <h6 class="font-roboto-mono"><a class="new-item-btn" href="/newitem" role="button">New Item</a></h6>
         {% endif %}
         {% for item in items %}
           <p class="font-dosis items"><a class="category-item-btn" href="/item/{{ item.id }}">{{ item.name }}</a></p>
