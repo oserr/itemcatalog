@@ -83,3 +83,7 @@ body {
   font-family: 'Roboto Mono', monospace;
   color: #caffd0;
 }
+
+.hidden {
+  display: none;
+}
