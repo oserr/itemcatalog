@@ -314,7 +314,7 @@ def json_index():
 
 @app.route('/items/<int:category_id>')
 def get_category_items(category_id):
-    '''Renders the items associated with a given category.'''
+    '''Allows a user to get the items with a given category.'''
     category = session.query(Category).get(category_id)
     if not category:
         raise AppErr('Category not found.')
@@ -326,7 +326,17 @@ def get_category_items(category_id):
 
 @app.route('/json/items/<int:category_id>')
 def json_get_category_items(category_id):
-    '''Returns the items associated with a given category in json format.'''
+    '''Allows the user to get the items with a given category via the JSON API
+    endpoint.
+
+    :return
+        A JSON object containing the following fields:
+        - categories: An array of one element with the category object, only
+          present on success.
+        - items: An array of items with the same category, only present on
+          success.
+        - error: An error message, only present if success is false.
+    '''
     category = session.query(Category).get(category_id)
     if not category:
         raise AppErr('Category not found.')
@@ -337,20 +347,14 @@ def json_get_category_items(category_id):
 
 @app.route('/logout')
 def logout():
-    '''Logs out a user by removing the cookie associated with a session.
-
-    If a user is not logged in then nothing happens. User is redirected to
-    main page.
-    '''
+    '''Allows a user to log out.'''
     flask_session.pop(SESSION_COOKIE, None)
     return redirect('/')
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    '''Logs in a user by creating a session cookie and redirects user to home
-    page.
-    '''
+    '''Allows a user to log in.'''
     if get_session_email(SESSION_COOKIE):
         return redirect('/')
     if request.method == 'GET':
@@ -374,21 +378,20 @@ def login():
 
 @app.route('/json/login', methods=['POST'])
 def json_login():
-    '''JSON API endpoint to login a user.
+    '''Allows a user to log in via the JSON API endpoint.
 
-    The client must set the Content-Type header to application/json, otherwise
-    get_json() returns None. The request must contain an email and password
-    fields, e.g., {email: "john@gmail.com", password: "password"}, both of
-    which are strings.
+    The client must
+    - set the Content-Type header to application/json
+    - the request must contain a json object with the following fields:
+        - email
+        - password
 
     :return
-        A json object of the form {success: bool}, where success is true if
-        the user was able to get logged in, or false otherwise. If success
-        is false, then json object will contain a string field, error, with
-        a description of the error, e.g.,
-        { success: false, error: "email does not exist"}. If the login is
-        successful, then the HTTP response will contain a cookie which
-        the client must send in subsequent requests.
+        A JSON object with the following fields:
+        - success: True or false, depending on success of operation.
+        - error: An error message, only present if success is false.
+
+        If login is successful, then session cookie is included in response.
     '''
     if get_session_email(SESSION_COOKIE):
         return jsonify(SUCCESS_JSON)
@@ -413,7 +416,7 @@ def json_login():
 
 @app.route('/glogin', methods=['POST'])
 def glogin():
-    '''Logs in a user via google signin.'''
+    '''Allows a user to log in via google.'''
     if get_session_email(SESSION_COOKIE):
         return redirect('/')
     token = request.form['token']
@@ -433,7 +436,7 @@ def glogin():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    '''Creates a record for a new user and redirects user to the main page.'''
+    '''Allows a user to register.'''
     if get_session_email(SESSION_COOKIE):
         return redirect('/')
     if request.method == 'GET':
@@ -458,22 +461,22 @@ def register():
 
 @app.route('/json/register', methods=['POST'])
 def json_register():
-    '''JSON API endpoint to register a user.
+    '''Allows a user to get registered via the JSON API endpoint.
 
-    The client must set the Content-Type header to application/json, otherwise
-    get_json() returns None. The request must contain an email and password
-    fields, e.g., {email: "john@gmail.com", password: "password"}, both of
-    which are strings.
+    The client must
+    - set the Content-Type header to application/json
+    - the request must contain a json object with the following fields:
+        - email
+        - password
 
     :return
-        A json object of the form {success: bool}, where success is true if
-        the user was able to register, or false otherwise. If success
-        is false, then json object will contain a string field, error, with
-        a description of the error, e.g.,
-        { success: false, error: "email already exist"}. If the registration
-        is successful, then the HTTP response will contain a cookie which
-        the client must send in subsequent requests that require a user to
-        be logged in.
+        A JSON object with the following fields:
+        - success: True or false, depending on success of operation.
+        - item: The new item after being created, only present on success.
+        - error: An error message, only present if success is false.
+
+        If registration is successful, then session cookie is included in
+        response.
     '''
     if get_session_email(SESSION_COOKIE):
         return jsonify(SUCCESS_JSON)
@@ -501,7 +504,7 @@ def json_register():
 @app.route('/newitem', methods=['GET', 'POST'])
 @requires_auth(make_html_err)
 def newitem():
-    '''Lets a user a create a new item for a given category.'''
+    '''Allows a user to create an item.'''
     categories = session.query(Category).all()
     if request.method == 'GET':
         return render_template('newitem.html', categories=categories)
@@ -533,7 +536,7 @@ def json_newitem():
 
 @app.route('/item/<int:item_id>')
 def getitem(item_id):
-    '''Renders a specific item.'''
+    '''Allows a user to get an item.'''
     item = session.query(Item).get(item_id)
     if not item:
         content = make_html_err(ITEM_NOT_FOUND_ERR % item_id)
@@ -544,12 +547,13 @@ def getitem(item_id):
 
 @app.route('/json/item/<int:item_id>')
 def json_getitem(item_id):
-    '''Creates a JSON response with an item.
+    '''Allows a user to get an item via the JSON API endpoint.
 
     :return
         A JSON object with the following fields:
         - success: True or false, depending on success of operatoin.
         - error: An error message, only present if success is false.
+        - item: The item being fetched, only present on success.
     '''
     item = session.query(Item).get(item_id)
     if not item:
@@ -562,12 +566,7 @@ def json_getitem(item_id):
 @requires_auth(make_html_err)
 @requires_item_owner(make_html_err)
 def edit_item():
-    '''Allows a user who owns an item to edit its data.
-
-    The user must own, and be logged in, to be able to edit an item. Everything
-    about an item can be changed, except the item ID, which is used internally
-    by the server. If an item is updated successfully, then user is redirected
-    to main page.
+    '''Allows a user to edit an item.
 
     edit_item depends on requires_auth to
     - authenticate user
@@ -594,7 +593,7 @@ def edit_item():
 @requires_auth(make_json_err)
 @requires_item_owner(make_json_err)
 def json_edit_item():
-    '''API endpoint for users to edit items.
+    '''Allows a user to edit an item via the JSON API endpoint.
 
     json_edit_item depends on requires_auth to
     - authenticate user
