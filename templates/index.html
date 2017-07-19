@@ -48,6 +48,10 @@
       font-size: 110%;
       text-decoration: none;
     }
+
+    .categories a {
+      color: #641e16;
+    }
   </style>
 {% endblock %}
 {% block content %}
@@ -68,7 +72,7 @@
       <div class="content-box">
         <h2 class="font-indie-flower">Categories</h2>
         {% for category in categories %}
-          <p class="font-fresca"><a class="category-item-btn" href="/items/{{ category.id }}">{{ category.name }}</a></p>
+          <p class="font-fresca categories"><a class="category-item-btn" href="/items/{{ category.id }}">{{ category.name }}</a></p>
         {% endfor %}
       </div>
       </div>
