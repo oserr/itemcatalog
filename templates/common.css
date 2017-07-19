@@ -1,0 +1,67 @@
+.font-fresca {
+  font-family: 'Fresca', sans-serif;
+}
+
+.font-indie-flower {
+  font-family: 'Indie Flower', cursive;
+}
+
+.font-dosis {
+  font-family: 'Dosis', sans-serif;
+}
+
+.font-roboto-mono {
+  font-family: 'Roboto Mono', monospace;
+}
+
+.font-gloria-hallelujah {
+  font-family: 'Gloria Hallelujah', cursive;
+}
+
+.font-shadows-into-light {
+  font-family: 'Shadows Into Light', cursive;
+}
+
+body {
+  background: black;
+}
+
+.jumbotron {
+  background: lightblue;
+}
+
+.jumbotron h1 {
+  color: #b4a0e5;
+}
+
+.jumbotron a {
+  background: #caffd0;
+  color: #b4a0e5;
+}
+
+.content-box {
+  border: 8px solid #003366;
+  border-radius:15px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  padding-left: 20px;
+  background: tan;
+  font-size: 120%;
+}
+
+.category-item-btn:hover {
+  font-size: 110%;
+  text-decoration: none;
+}
+
+.categories a {
+  color: #641e16;
+}
+
+.items a {
+  color: #0e6251;
+}
+
+.new-item-btn:hover {
+  text-decoration: none;
+}
