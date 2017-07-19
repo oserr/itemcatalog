@@ -513,16 +513,15 @@ def newitem():
 @app.route('/json/newitem', methods=['POST'])
 @requires_auth(make_json_err)
 def json_newitem():
-    '''API endpoint for creating a new item.
+    '''Allows a user to create an item via the JSON API endpoint.
 
-    Before creating an item, a user must log in to obtain a session cookie,
-    which should be included in the request Cookie header. The json request
-    must contain the following fields: title, description, and category.
-    Optionally, if the user is creating a new category, then the category
-    field must be set to other and the newcategory field must contain the new
-    category name. On success, the success field will be set to true and the
-    item field will contain the new item. On failure, the success field will be
-    set to false and the error field will contain a description of the error.
+    Relies on requires_auth to authenticate the user.
+
+    :return
+        A JSON object with the following fields:
+        - success: True or false, depending on success of operation.
+        - item: The new item after being created, only present on success.
+        - error: An error message, only present if success is false.
     '''
     try:
         item_fields = get_item_fields(request.get_json())
