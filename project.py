@@ -128,7 +128,7 @@ def requires_auth(err_func):
 
 
 ITEM_NOT_FOUND_ERR = 'Sorry, but we could not find item with ID %d'
-OWNER_ERR = 'Sorry, but user %s cannot modify item with ID %d'
+OWNER_ERR = 'Sorry, but you cannot modify %s'
 
 def requires_item_owner(err_func):
     '''Decorator function to pass in argument to decorated function.
@@ -157,7 +157,7 @@ def requires_item_owner(err_func):
                 content = err_func(ITEM_NOT_FOUND_ERR % item_id)
                 return make_response(content, 404)
             if g.user != item.user:
-                content = err_func(OWNER_ERR % (g.user.email, item_id))
+                content = err_func(OWNER_ERR % item.name)
                 return make_response(content, 403)
             g.item = item
             return func(*args, **args)
@@ -553,26 +553,27 @@ def json_getitem(item_id):
 
 @app.route('/item/<int:item_id>/edit', methods=['GET', 'POST'])
 @requires_auth(make_html_err)
-def edit_item(item_id):
+@requires_item_owner(make_html_err)
+def edit_item():
     '''Allows a user who owns an item to edit its data.
 
     The user must own, and be logged in, to be able to edit an item. Everything
     about an item can be changed, except the item ID, which is used internally
     by the server. If an item is updated successfully, then user is redirected
     to main page.
+
+    edit_item depends on requires_auth to authenticate the user and to load the
+    user data into the app content (i.e., g), and depends on
+    requires_item_owner to verify that the item exists and is owned by the user
+    making the request.
     '''
-    item = session.query(Item).get(item_id)
-    if not item:
-        raise AppErr('Item not found.')
-    if item.user != g.user:
-        raise AppErr('To edit, user must own item')
     if request.method == 'GET':
         categories = (session.query(Category)
-            .filter(Category.name != item.category_name).all())
+            .filter(Category.name != g.item.category_name).all())
         return render_template('newitem.html',
-            item=item, categories=categories, email=email)
+            item=g.item, categories=categories, email=g.user.email)
     item_fields = get_item_fields(request.form, create_mode=False)
-    item_fields.update_item(item)
+    item_fields.update_item(g.item)
     return redirect('/')
 
 
