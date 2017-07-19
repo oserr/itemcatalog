@@ -309,6 +309,7 @@ def json_index():
 
     :return
         A JSON object containing the following fields:
+        - success: True or false, depending on success of operation.
         - categories: An array category objects, only present on success.
         - items: An array of items in the catalog, only present on success.
         - error: An error message, only present if success is false.
@@ -338,6 +339,7 @@ def json_get_category_items(category_id):
 
     :return
         A JSON object containing the following fields:
+        - success: True or false, depending on success of operation.
         - categories: An array of one element with the category object, only
           present on success.
         - items: An array of items with the same category, only present on
