@@ -294,7 +294,7 @@ CLIENT_ID = json.loads(open('client_secret.json').read())['web']['client_id']
 @app.route('/')
 @app.route('/items')
 def index():
-    '''Renders the categories and items on the home page.'''
+    '''Allows a user to get all the items.'''
     categories = session.query(Category).all()
     items = session.query(Item).all()
     return render_template('index.html',
@@ -305,7 +305,14 @@ def index():
 @app.route('/json')
 @app.route('/json/items')
 def json_index():
-    '''Returns the categories and items in json format.'''
+    '''Allows a user to get all the items via the JSON API endpoint.
+
+    :return
+        A JSON object containing the following fields:
+        - categories: An array category objects, only present on success.
+        - items: An array of items in the catalog, only present on success.
+        - error: An error message, only present if success is false.
+    '''
     categories = [cat.to_dict() for cat in session.query(Category).all()]
     items = [item.to_dict() for item in session.query(Item).all()]
     response_dict = {'categories': categories, 'items': items}
