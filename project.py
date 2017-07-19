@@ -590,6 +590,14 @@ def json_edit_item():
     contains a failure description. On success, the success field is set to
     true and the item is embedded in the response. Not that a request that
     does not modify the item is treated like a success.
+
+    json_edit_item depends on requires_auth to
+    - authenticate user
+    - load app context g with user
+    and it depnds on requires_item_owner to
+    - verify item exists
+    - verify user owns item
+    - load app context g with item
     '''
     data = request.get_json()
     try:
