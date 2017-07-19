@@ -6,29 +6,16 @@
     }
 
     .jumbotron {
-      background: #3399ff;
+      background: lightblue;
     }
 
-    .categories {
-      border-width: 10px;
-      border-style: solid;
-      border-color: #003366;
+    .content-box {
+      border: 8px solid #003366;
       border-radius:15px;
       padding-bottom: 5px;
       padding-top: 5px;
       padding-left: 20px;
-      background: #ffcc99;
-    }
-
-    .items {
-      border-radius:15px;
-      border-width: 10px;
-      border-style: solid;
-      border-color: #003366;
-      padding-bottom: 5px;
-      padding-top: 5px;
-      padding-left: 20px;
-      background: #ff9966;
+      background: tan;
     }
   </style>
 {% endblock %}
@@ -45,17 +32,17 @@
       {% endif %}
       </p>
     </header>
-    <div class="row categories-and-items">
-      <div class="col-md-6 item-container">
-      <div class="categories">
+    <div class="row">
+      <div class="col-md-6">
+      <div class="content-box">
         <h2>Categories</h2>
         {% for category in categories %}
           <p><a href="/items/{{ category.id }}">{{ category.name }}</a></p>
         {% endfor %}
       </div>
       </div>
-      <div class="col-md-6 item-container">
-      <div class="items">
+      <div class="col-md-6">
+      <div class="content-box">
         <h2>Items</h2>
         {% if email %}
           <h6><a href="/newitem" role="button">New Item</a></h6>
