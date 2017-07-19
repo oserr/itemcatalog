@@ -544,7 +544,13 @@ def getitem(item_id):
 
 @app.route('/json/item/<int:item_id>')
 def json_getitem(item_id):
-    '''Returns the data for a given item in json format.'''
+    '''Creates a JSON response with an item.
+
+    :return
+        A JSON object with the following fields:
+        - success: True or false, depending on success of operatoin.
+        - error: An error message, only present if success is false.
+    '''
     item = session.query(Item).get(item_id)
     if not item:
         raise AppErr('Item not found.')
@@ -569,6 +575,9 @@ def edit_item():
     - verify item exists
     - verify user owns item
     - load app context g with item
+
+    :return
+        A a Response object redirecting the user to the root page.
     '''
     if request.method == 'GET':
         categories = (session.query(Category)
@@ -586,14 +595,6 @@ def edit_item():
 def json_edit_item():
     '''API endpoint for users to edit items.
 
-    A user must own an item, and must be logged in, to be able to modify it.
-    The JSON request must contain the following fields: item_id, title,
-    description, and category. Optionally, if category is other, then it must
-    also contain newcategory. On failure, success is set to false and error
-    contains a failure description. On success, the success field is set to
-    true and the item is embedded in the response. Not that a request that
-    does not modify the item is treated like a success.
-
     json_edit_item depends on requires_auth to
     - authenticate user
     - load app context g with user
@@ -601,6 +602,11 @@ def json_edit_item():
     - verify item exists
     - verify user owns item
     - load app context g with item
+
+    :return
+        A JSON object with the following fields:
+        - success: True or false, depending on success of operatoin.
+        - error: An error message, only present if success is false.
     '''
     data = request.get_json()
     try:
@@ -627,6 +633,9 @@ def delete_item():
     - verify item exists
     - verify user owns item
     - load app context g with item
+
+    :return
+        A a Response object redirecting the user to the root page.
     '''
     if request.method == 'GET':
         return render_template('item_delete.html', item=g.item)
@@ -653,6 +662,11 @@ def json_delete_item():
     - verify item exists
     - verify user owns item
     - load app context g with item
+
+    :return
+        A JSON object with the following fields:
+        - success: True or false, depending on success of operatoin.
+        - error: An error message, only present if success is false.
     '''
     cat = g.item.category_name
     session.query(Item).filter(Item.id == g.item.id).delete()
