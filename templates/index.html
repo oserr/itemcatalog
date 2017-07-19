@@ -41,13 +41,14 @@
       padding-top: 5px;
       padding-left: 20px;
       background: tan;
+      font-size: 120%;
     }
   </style>
 {% endblock %}
 {% block content %}
   <div class="container">
     <header class="jumbotron">
-      <h1>ItemCatalog</h1>
+      <h1 class="font-roboto-mono">ItemCatalog</h1>
       <p class="login-buttons">
       {% if email %}
         <a id="logout-btn" class="btn btn-default" href="/logout" role="button">Logout</a>
@@ -60,20 +61,20 @@
     <div class="row">
       <div class="col-md-6">
       <div class="content-box">
-        <h2>Categories</h2>
+        <h2 class="font-indie-flower">Categories</h2>
         {% for category in categories %}
-          <p><a href="/items/{{ category.id }}">{{ category.name }}</a></p>
+          <p class="font-fresca"><a href="/items/{{ category.id }}">{{ category.name }}</a></p>
         {% endfor %}
       </div>
       </div>
       <div class="col-md-6">
       <div class="content-box">
-        <h2>Items</h2>
+        <h2 class="font-gloria-hallelujah">Items</h2>
         {% if email %}
-          <h6><a href="/newitem" role="button">New Item</a></h6>
+          <h6 class="font-roboto-mono"><a href="/newitem" role="button">New Item</a></h6>
         {% endif %}
         {% for item in items %}
-          <p><a href="/item/{{ item.id }}">{{ item.name }}</a></p>
+          <p class="font-dosis"><a href="/item/{{ item.id }}">{{ item.name }}</a></p>
         {% endfor %}
       </div>
       </div>
