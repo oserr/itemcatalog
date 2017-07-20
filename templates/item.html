@@ -13,21 +13,18 @@
     </header>
     <div class="row">
       <div class="col-md-12">
-        <h1>{{ item.name }}</h1>
-        <h2>Description</h2>
-        <p>{{ item.description }}</p>
-        <h2>Category</h2>
-        <p>{{ item.category_name }}</p>
+        <div class="content-box">
+          <p class="h1 item-name font-gloria-hallelujah">{{ item.category_name }} <span class="vivid-orchid">&rarr;</span> {{ item.name }}</p>
+          <p class="h2 item-description font-roboto-mono">{{ item.description }}</p>
+          {% if email == item.user_email %}
+          <div>
+            <a class="btn btn-default" href="/item/{{ item.id }}/edit" role="button">Edit</a>
+            <a class="btn btn-default" href="/item/{{ item.id }}/delete" role="button">Delete</a>
+          </div>
+          {% endif %}
+        </div>
       </div>
     </div>
-    {% if email == item.user_email %}
-    <div class="row">
-      <div class="col-md-12">
-        <a class="btn btn-default" href="/item/{{ item.id }}/edit" role="button">Edit</a>
-        <a class="btn btn-default" href="/item/{{ item.id }}/delete" role="button">Delete</a>
-      </div>
-    </div>
-    {% endif %}
   </div>
 {% endblock %}
 {% block js %}

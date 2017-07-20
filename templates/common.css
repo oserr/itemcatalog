@@ -38,6 +38,10 @@ body {
   color: #ca3cff;
 }
 
+.vivid-orchid {
+  color: #ca3cff;
+}
+
 .btn, .abcRioButtonContentWrapper, .jumbotron a {
   background: lightblue;
   color: #ca3cff;
@@ -93,5 +97,13 @@ body {
 }
 
 h2 {
-  color: #ca3cff;
+  color: #b4a0e5;
+}
+
+.item-name {
+  color: #b4a0e5;
+}
+
+.item-description {
+  color: #caffd0;
 }
