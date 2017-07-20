@@ -35,15 +35,10 @@ body {
 }
 
 .jumbotron h1 {
-  color: #b4a0e5;
+  color: #ca3cff;
 }
 
-.jumbotron a {
-  background: #caffd0;
-  color: #b4a0e5;
-}
-
-.btn, .abcRioButtonContentWrapper {
+.btn, .abcRioButtonContentWrapper, .jumbotron a {
   background: lightblue;
   color: #ca3cff;
   background: #003366;
@@ -55,7 +50,7 @@ body {
   padding-bottom: 5px;
   padding-top: 5px;
   padding-left: 20px;
-  background: tan;
+  background: #1e1014;
   font-size: 120%;
 }
 
@@ -65,11 +60,11 @@ body {
 }
 
 .categories a {
-  color: #641e16;
+  color: #caffd0;
 }
 
 .items a {
-  color: #0e6251;
+  color: #caffd0;
 }
 
 .new-item-btn:hover {
@@ -95,4 +90,8 @@ body {
 
 .g-signin2 {
   margin-top: 20px;
+}
+
+h2 {
+  color: #ca3cff;
 }
