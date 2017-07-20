@@ -87,3 +87,7 @@ body {
 .hidden {
   display: none;
 }
+
+.form-group label {
+  color: #ca3cff;
+}
