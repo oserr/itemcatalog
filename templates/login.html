@@ -72,20 +72,22 @@
     $('#register-div a:first').click(e => {
       console.log('entered register handler');
       e.preventDefault();
-      $('.g-signin2').addClass('hidden');
+      $('#google-button').addClass('hidden');
       $('#register-div').addClass('hidden');
       $('#login-div').removeClass('hidden');
       $('form').attr('action', '/register');
+      $('form p:first').text('Register with your email');
       $('button').text('Register');
     });
 
     $('#login-div a:first').click(e => {
       console.log('entered login handler');
       e.preventDefault();
-      $('.g-signin2').removeClass('hidden');
+      $('#google-button').removeClass('hidden');
       $('#register-div').removeClass('hidden');
       $('#login-div').addClass('hidden');
       $('form').attr('action', '/login');
+      $('form p:first').text('Log in with your email');
       $('button').text('Login');
     });
   </script>
