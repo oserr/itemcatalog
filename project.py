@@ -160,7 +160,7 @@ def requires_item_owner(err_func):
                 content = err_func(OWNER_ERR % item.name)
                 return make_response(content, 403)
             g.item = item
-            return func(*args, **args)
+            return func(*args, **kwargs)
         return decorated
     return wrapper
 
@@ -578,7 +578,7 @@ def json_getitem(item_id):
 @app.route('/item/<int:item_id>/edit', methods=['GET', 'POST'])
 @requires_auth(make_html_err)
 @requires_item_owner(make_html_err)
-def edit_item():
+def edit_item(**kwargs):
     '''Allows a user to edit an item.
 
     edit_item depends on requires_auth to
@@ -605,7 +605,7 @@ def edit_item():
 @app.route('/json/item/<int:item_id>/edit', methods=['POST'])
 @requires_auth(make_json_err)
 @requires_item_owner(make_json_err)
-def json_edit_item():
+def json_edit_item(**kwargs):
     '''Allows a user to edit an item via the JSON API endpoint.
 
     json_edit_item depends on requires_auth to
@@ -633,7 +633,7 @@ def json_edit_item():
 @app.route('/item/<int:item_id>/delete', methods=['GET', 'POST'])
 @requires_auth(make_html_err)
 @requires_item_owner(make_html_err)
-def delete_item():
+def delete_item(**kwargs):
     '''Allows a user to delete an item.
 
     If, after deleting the item, there are no more items pointing to the
@@ -662,7 +662,7 @@ def delete_item():
 @app.route('/json/item/<int:item_id>/delete', methods=['POST'])
 @requires_auth(make_json_err)
 @requires_item_owner(make_json_err)
-def json_delete_item():
+def json_delete_item(**kwargs):
     '''Allows a user to delete an item via the JSON API endpoint.
 
     If, after deleting the item, there are no more items pointing to the
