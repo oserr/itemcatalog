@@ -43,7 +43,7 @@ body {
   color: #b4a0e5;
 }
 
-.btn {
+.btn, .abcRioButtonContentWrapper {
   background: lightblue;
   color: #ca3cff;
 }
@@ -90,4 +90,8 @@ body {
 
 .form-group label {
   color: #ca3cff;
+}
+
+.g-signin2 {
+  margin-top: 20px;
 }
