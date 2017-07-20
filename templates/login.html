@@ -7,43 +7,45 @@
     <header class="jumbotron">
       <h1 class="font-roboto-mono">ItemCatalog</h1>
     </header>
-    <form method="post" action="/login" class="login-form">
-      <p class="h2 form-hints">Log in with your email</p>
-      <div class="row">
-        <div class="form-group col-md-6">
-          <label class="h3 font-dosis" for="input-email">Email</label>
-          <input type="email" class="form-control" id="input-email" name="email">
+    <div class="content-box">
+      <form method="post" action="/login" class="login-form">
+        <p class="h2 form-hints">Log in with your email</p>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label class="h3 font-dosis" for="input-email">Email</label>
+            <input type="email" class="form-control" id="input-email" name="email">
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="form-group col-md-6">
-          <label class="h3 font-dosis" for="input-password">Password</label>
-          <input type="password" class="form-control" id="input-password" name="password">
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label class="h3 font-dosis" for="input-password">Password</label>
+            <input type="password" class="form-control" id="input-password" name="password">
+          </div>
         </div>
-      </div>
-      <div class="row">
+        <div class="row">
+          <div class="col-md-6">
+            <button type="submit" class="btn btn-primary">Login</button>
+          </div>
+        </div>
+      </form>
+      <div id="google-button" class="row bottom-form-neighbor">
         <div class="col-md-6">
-          <button type="submit" class="btn btn-primary">Login</button>
+          <p class="h2 form-hints">... or log in with Google</p>
+          <div class="g-signin2" data-scope="openid email" data-onsuccess="onSignIn"></div>
         </div>
       </div>
-    </form>
-    <div id="google-button" class="row bottom-form-neighbor">
-      <div class="col-md-6">
-        <p class="h2 form-hints">... or log in with Google</p>
-        <div class="g-signin2" data-scope="openid email" data-onsuccess="onSignIn"></div>
+      <div class="row bottom-form-neighbor">
+        <div id="register-div" class="col-md-6">
+          <p class="h2 form-hints">... or create an account<p>
+          <a class="btn btn-primary h1" href="/register" role="button">Register</a>
+        </div>
+        <div id="login-div" class="col-md-6 hidden">
+          <p class="h2 form-hints">... or log in if you already have an account<p>
+          <a class="btn btn-primary h1" href="/login" role="button">Login</a>
+        </div>
       </div>
-    </div>
-    <div class="row bottom-form-neighbor">
-      <div id="register-div" class="col-md-6">
-        <p class="h2 form-hints">... or create an account<p>
-        <a class="btn btn-primary h1" href="/register" role="button">Register</a>
+      <div id="err-msg">
       </div>
-      <div id="login-div" class="col-md-6 hidden">
-        <p class="h2 form-hints">... or log in if you already have an account<p>
-        <a class="btn btn-primary h1" href="/login" role="button">Login</a>
-      </div>
-    </div>
-    <div id="err-msg">
     </div>
   </div>
 {% endblock %}
