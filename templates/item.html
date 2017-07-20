@@ -5,9 +5,9 @@
       <h1>ItemCatalog</h1>
       <p class="login-buttons">
       {% if email %}
-        <a id="logout-btn" class="btn btn-default" href="/logout" role="button">Logout</a>
+        <a id="logout-btn" class="btn btn-default" href="/logout" role="button">LOGOUT</a>
       {% else %}
-        <a class="btn btn-default" href="/login" role="button">Login</a>
+        <a class="btn btn-default" href="/login" role="button">LOGIN</a>
       {% endif %}
       </p>
     </header>
@@ -18,8 +18,8 @@
           <p class="h2 aero-blue font-roboto-mono">{{ item.description }}</p>
           {% if email == item.user_email %}
           <div>
-            <a class="btn btn-default" href="/item/{{ item.id }}/edit" role="button">Edit</a>
-            <a class="btn btn-default" href="/item/{{ item.id }}/delete" role="button">Delete</a>
+            <a class="btn btn-default" href="/item/{{ item.id }}/edit" role="button">EDIT</a>
+            <a class="btn btn-default" href="/item/{{ item.id }}/delete" role="button">DELETE</a>
           </div>
           {% endif %}
         </div>
