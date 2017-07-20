@@ -22,6 +22,18 @@
   font-family: 'Shadows Into Light', cursive;
 }
 
+.vivid-orchid {
+  color: #ca3cff;
+}
+
+.light-pastel-purple {
+  color: #b4a0e5;
+}
+
+.aero-blue {
+  color: #caffd0;
+}
+
 body {
   background: black;
 }
@@ -35,10 +47,6 @@ body {
 }
 
 .jumbotron h1 {
-  color: #ca3cff;
-}
-
-.vivid-orchid {
   color: #ca3cff;
 }
 
@@ -100,10 +108,11 @@ h2 {
   color: #b4a0e5;
 }
 
-.item-name {
-  color: #b4a0e5;
+.a-sans-decoration, .a-sans-decoration:hover {
+  text-decoration: none;
+  color: inherit;
 }
 
-.item-description {
-  color: #caffd0;
+.a-sans-decoration:hover {
+  font-size: 105%;
 }
