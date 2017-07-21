@@ -513,24 +513,7 @@ def json_register():
     '''
     if get_session_email(SESSION_COOKIE):
         return jsonify(SUCCESS_JSON)
-    data = request.get_json()
-    if not data:
-        return make_json_err('Bad request or ill-formed json')
-    email = data.get('email')
-    if not email:
-        return make_json_err('Cannot register without an email')
-    password = data.get('password')
-    if not password:
-        return make_json_err('Cannot register without a password')
-    user = session.query(User).get(email)
-    if user:
-        return make_json_err('An account already exists for this email')
-    salt = gensalt()
-    hsh = get_hash(salt, password)
-    user = User(email=email, salt=salt, pwdhsh=hsh)
-    session.add(user)
-    session.commit()
-    flask_session[SESSION_COOKIE] = email
+    register_helper(request.get_json())
     return jsonify(SUCCESS_JSON)
 
 
