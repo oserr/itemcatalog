@@ -368,7 +368,7 @@ def logout():
 
 @app.route('/login')
 def get_login():
-    '''Allows a user to log in.'''
+    '''Renders the form that allows a user to log in.'''
     if get_session_email(SESSION_COOKIE):
         return redirect('/')
     return render_template('login.html')
