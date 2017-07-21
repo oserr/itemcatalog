@@ -521,8 +521,8 @@ def json_register():
 @requires_auth(make_html_err)
 def newitem():
     '''Allows a user to create an item.'''
-    categories = session.query(Category).all()
     if request.method == 'GET':
+        categories = session.query(Category).all()
         return render_template('newitem.html', categories=categories)
     item_fields = get_item_fields(request.form)
     item_fields.create_item(g.user)
