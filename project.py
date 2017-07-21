@@ -430,22 +430,8 @@ def json_login():
     '''
     if get_session_email(SESSION_COOKIE):
         return jsonify(SUCCESS_JSON)
-    data = request.get_json()
-    if not data:
-        return make_json_err('Bad request or ill-formed json')
-    email = data.get('email')
-    if not email:
-        return make_json_err('Cannot login without email')
-    password = data.get('password')
-    if not password:
-        return make_json_err('Cannot login without password')
-    user = session.query(User).get(email)
-    if not user:
-        return make_json_err('Do not recognize email')
-    hsh = get_hash(user.salt, password)
-    if hsh != user.pwdhsh:
-        return make_json_err('The password is incorrect.')
-    flask_session[SESSION_COOKIE] = email
+    user = check_login_data(request.get_json())
+    flask_session[SESSION_COOKIE] = user.email
     return jsonify(SUCCESS_JSON)
 
 
