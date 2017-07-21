@@ -88,6 +88,31 @@ def check_login_data(data):
     return user
 
 
+def check_register_data(data):
+    '''Checks the user registration data provided in a form or in a JSON
+    object.
+
+    :param data
+        A dictionary containing the login credentials in the following fields:
+        - email
+        - password
+    :return
+        A tuple of the form (email, password).
+    '''
+    if not data:
+        raise AppErr('Did not find any data in the request')
+    email = data.get('email')
+    if not email:
+        raise AppErr('Cannot register without email')
+    password = data.get('password')
+    if not password:
+        raise AppErr('Cannot register without password')
+    user = session.query(User).get(email)
+    if user:
+        raise AppErr('User already exists')
+    return email, password
+
+
 def make_html_err(err):
     '''Render the html error page.
 
