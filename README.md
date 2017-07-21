@@ -55,12 +55,11 @@ Once the application is running, you should be able to do any of the following
 
 ## Source code
 
-Most of the meat of the application is located in _project.py_, except that the database models
-are defined in _models.py_. The _templates_ directory contains the templates used by
-[Jinja2][4], the default template engine used by [Flask][1], although the CSS file and
-Javascript files located there are not proper templates, however, putting them there made my
-life simpler. There's not a log of Javascript, but there is enough to add a pinch of dynamism
-to the app.
+The meat of the application is located in _project.py_, except that the database models are
+defined in _models.py_. The _templates_ directory contains the templates used by [Jinja2][4],
+the default template engine used by [Flask][1], although the CSS file and Javascript files
+located there are not proper templates, however, putting them there made my life simpler.
+There's not a lot of Javascript, but there is enough to add a pinch of dynamism to the app.
 
 ## Improvements
 
