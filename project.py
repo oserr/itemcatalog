@@ -470,6 +470,7 @@ def get_login():
 
 
 @app.route('/login', methods=['POST'])
+@err_handler(make_html_err)
 def post_login():
     '''Allows a user to log in.'''
     if get_session_email(SESSION_COOKIE):
@@ -480,6 +481,7 @@ def post_login():
 
 
 @app.route('/json/login', methods=['POST'])
+@err_handler(make_json_err)
 def json_login():
     '''Allows a user to log in via the JSON API endpoint.
 
