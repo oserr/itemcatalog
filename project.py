@@ -380,7 +380,7 @@ def get_category_items(category_id):
     '''Allows a user to get the items with a given category.'''
     category = session.query(Category).get(category_id)
     if not category:
-        raise AppErr('Category not found.')
+        raise AppErr('Category not found')
     items = session.query(Item).filter(Item.category == category).all()
     return render_template('index.html',
         with_link=True,
@@ -404,7 +404,7 @@ def json_get_category_items(category_id):
     '''
     category = session.query(Category).get(category_id)
     if not category:
-        raise AppErr('Category not found.')
+        raise AppErr('Category not found')
     items = [item.to_dict() for item in \
         session.query(Item).filter(Item.category == category).all()]
     return jsonify({
