@@ -88,16 +88,14 @@ def check_login_data(data):
     return user
 
 
-def check_register_data(data):
+def register_helper(data):
     '''Checks the user registration data provided in a form or in a JSON
-    object.
+    object and creates a user profile.
 
     :param data
         A dictionary containing the login credentials in the following fields:
         - email
         - password
-    :return
-        A tuple of the form (email, password).
     '''
     if not data:
         raise AppErr('Did not find any data in the request')
@@ -110,7 +108,12 @@ def check_register_data(data):
     user = session.query(User).get(email)
     if user:
         raise AppErr('User already exists')
-    return email, password
+    salt = gensalt()
+    hsh = get_hash(salt, password)
+    user = User(email=email, salt=salt, pwdhsh=hsh)
+    session.add(user)
+    session.commit()
+    flask_session[SESSION_COOKIE] = email
 
 
 def make_html_err(err):
