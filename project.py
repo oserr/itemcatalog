@@ -319,16 +319,16 @@ def get_item_fields(data, create_mode=True):
         if cat_name == 'other':
             raise AppErr('New catogory name cannot be other.')
         if get_category_count(cat_name):
-            raise AppErr('Category {} already exist.'.format(cat_name))
+            raise AppErr('Category %s already exist.' % cat_name)
     else:
         category = session.query(Category) \
             .filter(Category.name == cat_name).first()
         if not category:
-            raise AppErr('Category {} does not exist.'.format(cat_name))
+            raise AppErr('Category %s does not exist' % cat_name)
         item = session.query(Item).filter(Item.name == title).first()
         if create_mode and item and item.category == category:
-            raise AppErr('Item {} already exists for category {}.' \
-                .format(title, category.name))
+            raise AppErr('Item %s already exists for category %s' %
+                (title, category.name))
     return ItemFields(title, description, cat_name, category)
 
 
