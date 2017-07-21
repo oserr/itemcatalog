@@ -14,7 +14,7 @@
     <div class="row">
       <div class="col-md-6">
         <div class="content-box">
-          <h2 class="font-indie-flower">Categories</h2>
+          <p class="h2 light-pastel-purple font-indie-flower">Categories</p>
           {% for category in categories %}
             <p class="font-fresca aero-blue"><a class="a-sans-decoration" href="/items/{{ category.id }}">{{ category.name }}</a></p>
           {% endfor %}
@@ -22,7 +22,7 @@
       </div>
       <div class="col-md-6">
         <div class="content-box">
-          <h2 class="font-gloria-hallelujah">Items</h2>
+          <p class="h2 light-pastel-purple font-gloria-hallelujah">Items</p>
           {% if email %}
             <h6 class="font-roboto-mono"><a class="new-item-btn" href="/newitem" role="button">NEW ITEM</a></h6>
           {% endif %}
