@@ -6,7 +6,7 @@
     <p><a id="logout-btn" class="btn btn-default" href="/logout" role="button">LOGOUT</a></p>
   </header>
   <form class="content-box" method="post" action={% if item %}"/item/{{ item.id }}/edit"{% else %}"newitem"{% endif %}>
-    <p class="form-hints h2">{{ 'Edit the item' if item else 'Create a new item!' }}</p>
+    <p class="font-roboto-mono aero-blue h2">{{ 'Edit the item' if item else 'Create a new item!' }}</p>
     <div class="row">
       <div class="form-group col-md-6">
         <label for="title" class="h3">Item Name</label>
