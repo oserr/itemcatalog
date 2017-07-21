@@ -366,13 +366,19 @@ def logout():
     return redirect('/')
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
+@app.route('/login')
+def get_login():
     '''Allows a user to log in.'''
     if get_session_email(SESSION_COOKIE):
         return redirect('/')
-    if request.method == 'GET':
-        return render_template('login.html')
+    return render_template('login.html')
+
+
+@app.route('/login', methods=['POST'])
+def post_login():
+    '''Allows a user to log in.'''
+    if get_session_email(SESSION_COOKIE):
+        return redirect('/')
     email = request.form['email']
     if not email:
         raise AppErr('The email cannot be empty.')
