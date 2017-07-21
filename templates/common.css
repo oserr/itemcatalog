@@ -100,6 +100,10 @@ body {
   color: #b4a0e5;
 }
 
+label {
+  font-family: 'Dosis', sans-serif;
+}
+
 .g-signin2 {
   margin-top: 20px;
 }

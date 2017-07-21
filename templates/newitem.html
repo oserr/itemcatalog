@@ -11,19 +11,19 @@
     <p class="form-hints h2">{{ 'Edit the item' if item else 'Create a new item!' }}</p>
     <div class="row">
       <div class="form-group col-md-6">
-        <label for="title" class="h3 font-dosis">Item Name</label>
+        <label for="title" class="h3">Item Name</label>
         <input id="title" type="text" class="form-control input-lg" name="title" value="{{ item.name if item }}">
       </div>
     </div>
     <div class="row">
       <div class="form-group col-md-6">
-        <label for="description" class="h3 font-dosis">Description</label>
+        <label for="description" class="h3">Description</label>
         <textarea id="description" class="form-control input-lg comment-input" name="description">{{ item.description if item }}</textarea>
       </div>
     </div>
     <div class="row">
       <div class="form-group col-md-6">
-        <label for="category" class="h3 font-dosis">Category <span class="h4 aero-blue">select other to create category</span></label>
+        <label for="category" class="h3">Category <span class="h4 aero-blue">select other to create category</span></label>
         <select id="category" name="category" class="form-control input-lg">
           {% if item %}
           <option value="{{ item.category_name }}">{{ item.category_name }}</option>
@@ -37,7 +37,7 @@
     </div>
     <div id="newcategory-row" class="row">
       <div class="form-group col-md-6">
-        <label for="newcategory" class="h3 font-dosis">New Category Name <span class="h4 aero-blue">may not create other</span></label>
+        <label for="newcategory" class="h3">New Category Name <span class="h4 aero-blue">may not create other</span></label>
         <input id="newcategory" type="text" class="form-control input-lg" name="newcategory">
       </div>
     </div>
