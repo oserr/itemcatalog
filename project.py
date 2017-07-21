@@ -506,6 +506,7 @@ def json_login():
 
 
 @app.route('/glogin', methods=['POST'])
+@err_handler(make_json_err)
 def glogin():
     '''Allows a user to log in via google.'''
     if get_session_email(SESSION_COOKIE):
@@ -520,9 +521,7 @@ def glogin():
     if not user:
         raise AppErr('Do not recognize email')
     flask_session[SESSION_COOKIE] = email
-    # TODO: send error responses in json so onerrer or status != 200
-    # can do something
-    return ''
+    return jsonify(SUCCESS_JSON)
 
 
 @app.route('/register', methods=['POST'])
