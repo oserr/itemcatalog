@@ -498,10 +498,9 @@ def json_login():
 
         If login is successful, then session cookie is included in response.
     '''
-    if get_session_email(SESSION_COOKIE):
-        return jsonify(SUCCESS_JSON)
-    user = login_helper(request.get_json())
-    flask_session[SESSION_COOKIE] = user.email
+    if not get_session_email(SESSION_COOKIE):
+        user = login_helper(request.get_json())
+        flask_session[SESSION_COOKIE] = user.email
     return jsonify(SUCCESS_JSON)
 
 
