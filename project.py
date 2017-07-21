@@ -448,7 +448,7 @@ def glogin():
     email = id_info['email']
     user = session.query(User).get(email)
     if not user:
-        raise AppErr('User {} does not have an account'.format(email))
+        raise AppErr('Do not recognize email')
     flask_session[SESSION_COOKIE] = email
     # TODO: send error responses in json so onerrer or status != 200
     # can do something
