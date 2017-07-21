@@ -263,7 +263,7 @@ def get_category_count(category):
 
 def delete_category(category):
     '''Deletes a category from the database.'''
-    session.query(Category) .filter(Category.name == category).delete()
+    session.query(Category).filter(Category.name == category).delete()
 
 
 class ItemFields:
