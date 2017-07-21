@@ -2,7 +2,7 @@
 {% block content %}
   <div class="container">
     <header class="jumbotron">
-      <h1 class="font-roboto-mono">ItemCatalog</h1>
+      <h1>{% if not with_link %}ItemCatalog{% else %}<a class="a-sans-decoration" href="/">ItemCatalgo</a>{% endif %}</h1>
       <p>
       {% if email %}
         <a id="logout-btn" class="btn btn-default" href="/logout" role="button">LOGOUT</a>

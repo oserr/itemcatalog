@@ -328,6 +328,7 @@ def get_category_items(category_id):
         raise AppErr('Category not found.')
     items = session.query(Item).filter(Item.category == category).all()
     return render_template('index.html',
+        with_link=True,
         email=get_session_email(SESSION_COOKIE),
         categories=[category], items=items)
 

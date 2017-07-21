@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container">
   <header class="jumbotron">
-    <h1>ItemCatalog</h1>
+    <h1><a class="a-sans-decoration" href="/">ItemCatalog</a></h1>
     <p><a id="logout-btn" class="btn btn-default" href="/logout" role="button">LOGOUT</a></p>
   </header>
   <form class="content-box" method="post" action={% if item %}"/item/{{ item.id }}/edit"{% else %}"newitem"{% endif %}>
