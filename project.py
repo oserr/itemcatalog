@@ -61,7 +61,7 @@ def get_session_email(cookie):
     return flask_session.get(cookie)
 
 
-def check_login_data(data):
+def login_helper(data):
     '''Checks the login data provided in a form or in a JSON object.
 
     :param data
@@ -434,7 +434,7 @@ def post_login():
     '''Allows a user to log in.'''
     if get_session_email(SESSION_COOKIE):
         return redirect('/')
-    user = check_login_data(request.form)
+    user = login_helper(request.form)
     flask_session[SESSION_COOKIE] = user.email
     return redirect('/')
 
@@ -458,7 +458,7 @@ def json_login():
     '''
     if get_session_email(SESSION_COOKIE):
         return jsonify(SUCCESS_JSON)
-    user = check_login_data(request.get_json())
+    user = login_helper(request.get_json())
     flask_session[SESSION_COOKIE] = user.email
     return jsonify(SUCCESS_JSON)
 
