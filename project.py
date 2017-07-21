@@ -525,6 +525,7 @@ def glogin():
 
 
 @app.route('/register', methods=['POST'])
+@err_handler(make_html_err)
 def register():
     '''Allows a user to register.'''
     if get_session_email(SESSION_COOKIE):
@@ -534,6 +535,7 @@ def register():
 
 
 @app.route('/json/register', methods=['POST'])
+@err_handler(make_json_err)
 def json_register():
     '''Allows a user to get registered via the JSON API endpoint.
 
@@ -559,6 +561,7 @@ def json_register():
 
 
 @app.route('/newitem', methods=['GET', 'POST'])
+@err_handler(make_html_err)
 @requires_auth(make_html_err)
 def newitem():
     '''Allows a user to create an item.'''
@@ -571,6 +574,7 @@ def newitem():
 
 
 @app.route('/json/newitem', methods=['POST'])
+@err_handler(make_json_err)
 @requires_auth(make_json_err)
 def json_newitem():
     '''Allows a user to create an item via the JSON API endpoint.
@@ -583,15 +587,13 @@ def json_newitem():
         - item: The new item after being created, only present on success.
         - error: An error message, only present if success is false.
     '''
-    try:
-        item_fields = get_item_fields(request.get_json())
-    except AppErr as err:
-        return make_json_err(str(err))
+    item_fields = get_item_fields(request.get_json())
     item = item_fields.create_item(g.user)
     return jsonify({'success': True, 'item': item.to_dict()})
 
 
 @app.route('/item/<int:item_id>')
+@err_handler(make_html_err)
 def getitem(item_id):
     '''Allows a user to get an item.'''
     item = session.query(Item).get(item_id)
@@ -603,6 +605,7 @@ def getitem(item_id):
 
 
 @app.route('/json/item/<int:item_id>')
+@err_handler(make_json_err)
 def json_getitem(item_id):
     '''Allows a user to get an item via the JSON API endpoint.
 
@@ -620,6 +623,7 @@ def json_getitem(item_id):
 
 
 @app.route('/item/<int:item_id>/edit', methods=['GET', 'POST'])
+@err_handler(make_html_err)
 @requires_auth(make_html_err)
 @requires_item_owner(make_html_err)
 def edit_item(**kwargs):
@@ -647,6 +651,7 @@ def edit_item(**kwargs):
 
 
 @app.route('/json/item/<int:item_id>/edit', methods=['POST'])
+@err_handler(make_json_err)
 @requires_auth(make_json_err)
 @requires_item_owner(make_json_err)
 def json_edit_item(**kwargs):
@@ -666,15 +671,13 @@ def json_edit_item(**kwargs):
         - error: An error message, only present if success is false.
     '''
     data = request.get_json()
-    try:
-        item_fields = get_item_fields(data, create_mode=False)
-    except AppErr as err:
-        return make_json_err(str(err))
+    item_fields = get_item_fields(data, create_mode=False)
     item_fields.update_item(g.item)
     return jsonify({'success': True, 'item': g.item.to_dict()})
 
 
 @app.route('/item/<int:item_id>/delete', methods=['GET', 'POST'])
+@err_handler(make_html_err)
 @requires_auth(make_html_err)
 @requires_item_owner(make_html_err)
 def delete_item(**kwargs):
@@ -704,6 +707,7 @@ def delete_item(**kwargs):
 
 
 @app.route('/json/item/<int:item_id>/delete', methods=['POST'])
+@err_handler(make_json_err)
 @requires_auth(make_json_err)
 @requires_item_owner(make_json_err)
 def json_delete_item(**kwargs):
