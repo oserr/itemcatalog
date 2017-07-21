@@ -384,6 +384,7 @@ CLIENT_ID = json.loads(open('client_secret.json').read())['web']['client_id']
 
 @app.route('/')
 @app.route('/items')
+@err_handler(make_html_err)
 def index():
     '''Allows a user to get all the items.'''
     categories = session.query(Category).all()
@@ -395,6 +396,7 @@ def index():
 
 @app.route('/json')
 @app.route('/json/items')
+@err_handler(make_json_err)
 def json_index():
     '''Allows a user to get all the items via the JSON API endpoint.
 
