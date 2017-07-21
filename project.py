@@ -488,13 +488,7 @@ def register():
     '''Allows a user to register.'''
     if get_session_email(SESSION_COOKIE):
         return redirect('/')
-    email, password = check_register_data(request.form)
-    salt = gensalt()
-    hsh = get_hash(salt, password)
-    user = User(email=email, salt=salt, pwdhsh=hsh)
-    session.add(user)
-    session.commit()
-    flask_session[SESSION_COOKIE] = email
+    register_helper(request.form)
     return redirect('/')
 
 
