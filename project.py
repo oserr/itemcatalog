@@ -414,6 +414,7 @@ def json_index():
 
 
 @app.route('/items/<int:category_id>')
+@err_handler(make_html_err)
 def get_category_items(category_id):
     '''Allows a user to get the items with a given category.'''
     category = session.query(Category).get(category_id)
@@ -427,6 +428,7 @@ def get_category_items(category_id):
 
 
 @app.route('/json/items/<int:category_id>')
+@err_handler(make_json_err)
 def json_get_category_items(category_id):
     '''Allows the user to get the items with a given category via the JSON API
     endpoint.
