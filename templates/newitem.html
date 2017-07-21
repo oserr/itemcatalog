@@ -3,9 +3,7 @@
 <div class="container">
   <header class="jumbotron">
     <h1>ItemCatalog</h1>
-    <p class="login-buttons">
-      <a id="logout-btn" class="btn btn-default" href="/logout" role="button">LOGOUT</a>
-    </p>
+    <p><a id="logout-btn" class="btn btn-default" href="/logout" role="button">LOGOUT</a></p>
   </header>
   <form class="content-box" method="post" action={% if item %}"/item/{{ item.id }}/edit"{% else %}"newitem"{% endif %}>
     <p class="form-hints h2">{{ 'Edit the item' if item else 'Create a new item!' }}</p>
