@@ -61,6 +61,33 @@ def get_session_email(cookie):
     return flask_session.get(cookie)
 
 
+def check_login_data(data):
+    '''Checks the login data provided in a form or in a JSON object.
+
+    :param data
+        A dictionary containing the login credentials in the following fields:
+        - email
+        - password
+    :return
+        The user data from the DB.
+    '''
+    if not data:
+        raise AppErr('Did not find any data in the request')
+    email = data.get('email')
+    if not email:
+        raise AppErr('Cannot login without email')
+    password = data.get('password')
+    if not password:
+        raise AppErr('Cannot login without password')
+    user = session.query(User).get(email)
+    if not user:
+        raise AppErr('Do not recognize email')
+    hsh = get_hash(user.salt, password)
+    if hsh != user.pwdhsh:
+        raise AppErr('The password is incorrect.')
+    return user
+
+
 def make_html_err(err):
     '''Render the html error page.
 
