@@ -140,6 +140,42 @@ def make_json_err(msg):
     return jsonify({'success': False, 'error': msg})
 
 
+def err_handler(err_func):
+    '''Decorator function to pass in argument to decorated function.
+
+    :param err_func
+        A function that creates json or html error objects.
+    '''
+    def wrapper(func):
+        '''Creates a decorated function.
+
+        :param func
+            The decorated function
+        '''
+        @functools.wraps(func)
+        def decorated(*args, **kwargs):
+            '''Creates a response with the correct error status code.
+
+            :return
+                If func raises an AppErr, then return a response with a status
+                code of 400, else if func raises an Exception, then return a
+                response with a status code of 500, else simply return the
+                return value of func.
+            '''
+            try:
+                response = func(*args, **kwargs)
+            except AppErr as err:
+                content = err_func(str(err))
+                response = make_response(content, 400)
+            except Exception as err:
+                content = err_func('Internal Server Error: ' + str(err))
+                response = make_response(content, 500)
+            return response
+        return decorated
+    return wrapper
+
+
+
 AUTH_ERR_MSG = 'Coult not verify your access level for %s. You have to log in.'
 ACCT_ERR_MSG = 'Could not find your account. You have to create an account.'
 
