@@ -480,22 +480,12 @@ def glogin():
     return ''
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register', methods=['POST'])
 def register():
     '''Allows a user to register.'''
     if get_session_email(SESSION_COOKIE):
         return redirect('/')
-    if request.method == 'GET':
-        return send_from_directory('html', 'register.html')
-    email = request.form['email']
-    if not email:
-        raise AppErr('The email cannot be empty.')
-    password = request.form['password']
-    if not password:
-        raise AppErr('The password cannot be empty.')
-    user = session.query(User).get(email)
-    if user:
-        raise AppErr('The email is already taken.')
+    email, password = check_register_data(request.form)
     salt = gensalt()
     hsh = get_hash(salt, password)
     user = User(email=email, salt=salt, pwdhsh=hsh)
