@@ -301,11 +301,11 @@ def get_item_fields(data, create_mode=True):
         raise AppErr('Did not find any data in the request')
     title = data.get('title')
     if not title:
-        raise AppErr('The item must have a name.')
+        raise AppErr('The item must have a name')
     title = title.lower()
     description = data.get('description')
     if not description:
-        raise AppErr('The item must have a description.')
+        raise AppErr('The item must have a description')
     cat_name = data.get('category')
     category = None
     if not cat_name:
@@ -314,12 +314,12 @@ def get_item_fields(data, create_mode=True):
     if cat_name == 'other':
         cat_name = data.get('newcategory')
         if not cat_name:
-            raise AppErr('New category name must be something.')
+            raise AppErr('New category name must be something')
         cat_name = cat_name.lower()
         if cat_name == 'other':
-            raise AppErr('New catogory name cannot be other.')
+            raise AppErr('New catogory name cannot be other')
         if get_category_count(cat_name):
-            raise AppErr('Category %s already exist.' % cat_name)
+            raise AppErr('Category %s already exist' % cat_name)
     else:
         category = session.query(Category) \
             .filter(Category.name == cat_name).first()
