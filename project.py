@@ -298,7 +298,7 @@ def get_item_fields(data, create_mode=True):
         An ItemFields with the values to create or update an Item.
     '''
     if not data:
-        raise AppErr('Missing fields data')
+        raise AppErr('Did not find any data in the request')
     title = data.get('title')
     if not title:
         raise AppErr('The item must have a name.')
