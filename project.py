@@ -406,20 +406,8 @@ def post_login():
     '''Allows a user to log in.'''
     if get_session_email(SESSION_COOKIE):
         return redirect('/')
-    email = request.form['email']
-    if not email:
-        raise AppErr('The email cannot be empty.')
-    password = request.form['password']
-    if not password:
-        raise AppErr('The password cannot be empty.')
-    user = session.query(User).get(email)
-    if not user:
-        raise AppErr('A user with email {} does not exist.'.format(email))
-    salt = gensalt()
-    hsh = get_hash(user.salt, password)
-    if hsh != user.pwdhsh:
-        raise AppErr('The password is incorrect.')
-    flask_session[SESSION_COOKIE] = email
+    user = check_login_data(request.form)
+    flask_session[SESSION_COOKIE] = user.email
     return redirect('/')
 
 
