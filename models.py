@@ -40,7 +40,8 @@ class Item(Base):
             'id': self.id,
             'name': self.name,
             'description': self.description,
-            'category_name': self.category_name
+            'category_name': self.category_name,
+            'category_id': self.category.id
         }
 
 
