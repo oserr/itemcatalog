@@ -76,15 +76,10 @@ the following
 
 If you are on Windows, then you can ommit `source` from the `activate` and `deactivate` commands.
 
-## Run the app
+## Running the app
 
-```bash
-cd thisRepoDir
-python project.py
-```
-
-This should launch the application on _localhost_ port 5000, and should produce the following
-output
+Activate the conda enviornment and run `python project.py`  to launch application. This should
+launch the application on _localhost_ port 5000, and should produce the following output
 
 ```
  * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
