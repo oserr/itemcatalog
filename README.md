@@ -1,8 +1,8 @@
 # ItemCatalog
 
 A basic [Flask][1] web app with a database backend that allows users to create basic profiles
-and then create categories with items. The point of the application is not to be interesting,
-but rather to excercise web development with an SQL database.
+and then create categories with items. The point of the application is to excercise web
+development with an SQL database.
 
 ## Prerequisites
 
@@ -10,7 +10,55 @@ but rather to excercise web development with an SQL database.
 * Any browser, to test the app.
 * [Anaconda/conda][3]. This is not strictly needed, but recommended, because `conda`, a
   package, dependency, and environment manger, will allow you to easily recreate my development
-  environment.
+  environment, specified in `environment.yml`.
+* An SQL database that can be used with [SQLAlchemy][alchemy].
+
+## SQL database
+Currently, the app is setup to use [PostgreSQL][postgres], but it can easily be modified to use
+a different SQL database, as long as [SQLAlchemy][alchemy] supports it. If your database is already
+in place, then it is simply a matter of [configuring the engine][engine]. For example, if you want
+use [SQLite][sqlite], then all you need to do is replace
+
+```python
+engine = create_engine('postgresql://omar:omar@localhost:5432/catalog')
+```
+
+with something like
+
+```python
+engine = create_engine('sqlite:///itemcatalog.db')
+```
+
+If you want to use postgres, then you'll need to install it, create a user, and create a database,
+unless you plan to use the app with the default user and database. If you are using Debian or one of
+its derivatives, then you can install postgres by running
+
+```bash
+sudo apt-get update
+sudo apt-get install postgresql
+```
+
+You can then create the user and database by running
+
+```bash
+createuser --createdb YourUserName
+createdb -O YourUserName YourDBName
+```
+
+where `YourUserName` is the username you want to use, and `YourDBName` is the name of the database.
+Note, when you first install PostgresSQL, you may need to run the commands as user `postgres`, i.e.,
+
+```bash
+sudo -u postgres createuser --createdb YourUserName
+sudo -u postgres createdb -O YourUserName YourDBName
+```
+
+The examples above assume that PostgreSQL is not using password authentication. If it is using password
+authentication, then you'll also need to add flag `--pwprompt` when you run `createuser`.
+
+Once you have everything setup, then you can modify the parameters used to create the SQLAlchemy engine,
+for example, by replacing `omar:omar` with your username and password, or omit the password if
+authentication is not required, and replace `catalog` with your database name.
 
 ## Setup the environment
 
@@ -74,3 +122,6 @@ The app needs more improvements than I can list here, but some important improve
 [2]: https://www.python.org/downloads/
 [3]: https://www.continuum.io/downloads
 [4]: http://jinja.pocoo.org/docs/2.9/
+[alchemy]: https://www.sqlalchemy.org/
+[postgres]: https://www.postgresql.org/
+[engines]: http://docs.sqlalchemy.org/en/latest/core/engines.html
