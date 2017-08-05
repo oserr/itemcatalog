@@ -1,4 +1,4 @@
-name: item-catalog
+name: env
 channels:
 - defaults
 dependencies:
@@ -6,9 +6,11 @@ dependencies:
 - flask=0.12.2=py36_0
 - itsdangerous=0.24=py36_0
 - jinja2=2.9.6=py36_0
+- libpq=9.5.4=0
 - markupsafe=0.23=py36_2
 - openssl=1.0.2l=0
 - pip=9.0.1=py36_1
+- psycopg2=2.7.1=py36_0
 - python=3.6.1=2
 - readline=6.2=2
 - setuptools=27.2.0=py36_0
@@ -26,5 +28,5 @@ dependencies:
   - pyasn1-modules==0.0.9
   - rsa==3.4.2
   - six==1.10.0
-prefix: /home/omar/opt/anaconda3/envs/item-catalog
+prefix: /home/omar/edu/udacity/fullstackweb/ic/env
 
