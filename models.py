@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 Base = declarative_base()
 
 class User(Base):
-    __tablename__ = 'user'
+    __tablename__ = 'user_acct'
     email = Column(String(50), primary_key=True)
     salt = Column(String(16), nullable=False)
     pwdhsh = Column(String(100), nullable=False)
