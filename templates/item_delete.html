@@ -8,7 +8,7 @@
   <form class="row content-box" method="post" action="/item/{{ item.id }}/delete">
     <div class="col-md-12">
       <p class="h2 aero-blue">
-        Are you sure you want to delete <strong class="light-pastel-purple">{{ item.name }}</strong> in category <strong class="light-pastel-purple">{{ item.category_name }}</strong>?
+        Are you sure you want to delete <strong class="light-pastel-purple">{{ item.name }}</strong> in category <strong class="light-pastel-purple">{{ item.category.name }}</strong>?
       </p>
       <button type="submit" class="btn btn-default">YES</button>
     </div>
