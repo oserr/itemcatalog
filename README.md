@@ -12,6 +12,7 @@ development with an SQL database.
   package, dependency, and environment manger, will allow you to easily recreate my development
   environment, specified in `environment.yml`.
 * An SQL database that can be used with [SQLAlchemy][alchemy].
+* Obtain a client key and secret from Google to use their [OAuth2][auth2] API.
 
 ## SQL database
 Currently, the app is setup to use [PostgreSQL][postgres], but it can easily be modified to use
@@ -56,6 +57,10 @@ sudo -u postgres createdb -O YourUserName YourDBName
 Once you have everything setup, then you can modify the parameters used to create the SQLAlchemy engine,
 for example, by replacing `omar:omar` with `YourUserName:YourPassowrd`, and replace `catalog` with
 your database name.
+
+## Google's OAuth 2.0
+After obtaining the OAuth client key from Google, you need to download the key and secret and
+store it in `client_secret.json`.
 
 ## Setting up the environment
 
@@ -123,3 +128,4 @@ The app needs more improvements than I can list here, but some important improve
 [alchemy]: https://www.sqlalchemy.org/
 [postgres]: https://www.postgresql.org/
 [engines]: http://docs.sqlalchemy.org/en/latest/core/engines.html
+[auth2]: https://developers.google.com/identity/protocols/OAuth2
