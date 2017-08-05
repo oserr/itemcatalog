@@ -305,8 +305,13 @@ class ItemFields:
 
     def update_item(self, item):
         '''Update an item if any of the fields have changed.'''
-        if item.category.name != self.category_name and not self.category:
-            self.create_category()
+        category_id = None
+        if item.category.name != self.category_name:
+            # If we are updating the category, then we may need to delete the
+            # old category
+            category_id = item.category_id
+            if not self.category:
+                self.create_category()
         if item.name != self.name or item.description != self.description \
             or item.category.name != self.category_name:
             item.name = self.name
@@ -314,6 +319,8 @@ class ItemFields:
             item.category_id = self.category.id
             session.add(item)
             session.commit()
+        if category_id != None and not get_category_count_by_id(category_id):
+            delete_category(category_id)
         return item
 
     def create_category(self):
