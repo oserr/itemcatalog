@@ -256,9 +256,12 @@ def requires_item_owner(err_func):
     return wrapper
 
 
-def get_category_count(category):
+def get_category_count(cat_name):
     '''Return the number of items that are part of a given category.'''
-    return session.query(Item).filter(Item.category_name == category).count()
+    category = session.query(Category).filter(Category.name == cat_name).first()
+    if not category:
+        return 0
+    return session.query(Item).filter(Item.category_id == category.id).count()
 
 
 def delete_category(category):
@@ -287,8 +290,7 @@ class ItemFields:
             self.create_category()
         item = Item(name=self.name,
             description=self.description,
-            category_name=self.category_name,
-            category=self.category,
+            category_id=self.category.id,
             user_email=user.email,
             user=user)
         session.add(item)
@@ -298,14 +300,13 @@ class ItemFields:
 
     def update_item(self, item):
         '''Update an item if any of the fields have changed.'''
-        if item.category_name != self.category_name and not category:
+        if item.category.name != self.category_name and not self.category:
             self.create_category()
         if item.name != self.name or item.description != self.description \
-            or item.category_name != self.category_name:
+            or item.category.name != self.category_name:
             item.name = self.name
             item.description = self.description
-            item.category_name = self.category_name
-            item.category = self.category
+            item.category_id = self.category.id
             session.add(item)
             session.commit()
         return item
@@ -369,7 +370,7 @@ def get_item_fields(data, create_mode=True):
 
 
 # Create and setup the DB
-engine = create_engine('sqlite:///catalog.db')
+engine = create_engine('postgresql://omar:omar@localhost:5432/catalog')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
@@ -641,7 +642,7 @@ def edit_item(**kwargs):
     '''
     if request.method == 'GET':
         categories = (session.query(Category)
-            .filter(Category.name != g.item.category_name).all())
+            .filter(Category.name != g.item.category.name).all())
         return render_template('newitem.html',
             item=g.item, categories=categories, email=g.user.email)
     item_fields = get_item_fields(request.form, create_mode=False)
@@ -698,7 +699,7 @@ def delete_item(**kwargs):
     '''
     if request.method == 'GET':
         return render_template('item_delete.html', item=g.item)
-    cat = g.item.category_name
+    cat = session.query(Category).get(g.item.category_id).name
     session.query(Item).filter(Item.id == g.item.id).delete()
     if not get_category_count(cat):
         delete_category(cat)
@@ -728,7 +729,7 @@ def json_delete_item(**kwargs):
         - success: True or false, depending on success of operatoin.
         - error: An error message, only present if success is false.
     '''
-    cat = g.item.category_name
+    cat = session.query(Category).get(g.item.category_id).name
     session.query(Item).filter(Item.id == g.item.id).delete()
     if not get_category_count(cat):
         delete_category(cat)
