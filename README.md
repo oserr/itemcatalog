@@ -60,15 +60,21 @@ Once you have everything setup, then you can modify the parameters used to creat
 for example, by replacing `omar:omar` with your username and password, or omit the password if
 authentication is not required, and replace `catalog` with your database name.
 
-## Setup the environment
+## Setting up the environment
 
-Assuming that you have `conda`, run the following
+If you are using `conda`, then you can replicate my development envioronment for python by doing
+the following
 
-```bash
-cd thisRepoDir
-conda upgrade conda
-conda-env create conda-env.txt
-```
+* make this directory your current working directory
+* import the conda environment
+    * to a global environment: `conda env create -n itemcatalog`.
+    * locally for project: `conda env create -p env`.
+* activate the environment
+    * from global environment: `source activate itemcatalog`
+    * from local environment: `source activate env`.
+* to exit an enviornment, run `source deactivate`.
+
+If you are on Windows, then you can ommit `source` from the `activate` and `deactivate` commands.
 
 ## Run the app
 
