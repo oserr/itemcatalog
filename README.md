@@ -12,7 +12,7 @@ development with an SQL database.
   package, dependency, and environment manger, will allow you to easily recreate my development
   environment, specified in `environment.yml`.
 * An SQL database that can be used with [SQLAlchemy][alchemy].
-* Obtain a client key and secret from Google to use their [OAuth2][auth2] API.
+* Obtain a client key and secret from Google to use their [OAuth 2.0][auth2] API.
 
 ## SQL database
 Currently, the app is setup to use [PostgreSQL][postgres], but it can easily be modified to use
