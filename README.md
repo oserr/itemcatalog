@@ -41,7 +41,7 @@ sudo apt-get install postgresql
 You can then create the user and database by running
 
 ```bash
-createuser --createdb YourUserName
+createuser --createdb --pwprompt YourUserName  # You will be prompted for a password
 createdb -O YourUserName YourDBName
 ```
 
@@ -49,16 +49,13 @@ where `YourUserName` is the username you want to use, and `YourDBName` is the na
 Note, when you first install PostgresSQL, you may need to run the commands as user `postgres`, i.e.,
 
 ```bash
-sudo -u postgres createuser --createdb YourUserName
+sudo -u postgres createuser --createdb --pwprompt YourUserName
 sudo -u postgres createdb -O YourUserName YourDBName
 ```
 
-The examples above assume that PostgreSQL is not using password authentication. If it is using password
-authentication, then you'll also need to add flag `--pwprompt` when you run `createuser`.
-
 Once you have everything setup, then you can modify the parameters used to create the SQLAlchemy engine,
-for example, by replacing `omar:omar` with your username and password, or omit the password if
-authentication is not required, and replace `catalog` with your database name.
+for example, by replacing `omar:omar` with `YourUserName:YourPassowrd`, and replace `catalog` with
+your database name.
 
 ## Setting up the environment
 
