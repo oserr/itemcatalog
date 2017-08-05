@@ -2,7 +2,7 @@
 
 from sqlalchemy import (Column, ForeignKey, Integer, String)
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy import create_engine
 
 Base = declarative_base()
@@ -12,12 +12,14 @@ class User(Base):
     email = Column(String(50), primary_key=True)
     salt = Column(String(16), nullable=False)
     pwdhsh = Column(String(100), nullable=False)
+    items = relationship('Item', backref=backref('user', lazy='joined'))
 
 
 class Category(Base):
     __tablename__ = 'category'
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
+    items = relationship('Item', backref=backref('category', lazy='joined'))
 
     def to_dict(self):
         '''Return this Category in dictionary format.'''
@@ -29,10 +31,8 @@ class Item(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
     description = Column(String(400), nullable=False)
-    category_name = Column(String(250), ForeignKey('category.name'))
-    category = relationship(Category)
+    category_id = Column(Integer, ForeignKey('category.id'))
     user_email = Column(String(75), ForeignKey('user.email'))
-    user = relationship(User)
 
     def to_dict(self):
         '''Return this Item in dictionary format.'''
@@ -40,10 +40,9 @@ class Item(Base):
             'id': self.id,
             'name': self.name,
             'description': self.description,
-            'category_name': self.category_name,
-            'category_id': self.category.id
+            'category_id': self.category_id
         }
 
 
-engine = create_engine('sqlite:///catalog.db')
+engine = create_engine('postgresql://omar:omar@localhost:5432/catalog')
 Base.metadata.create_all(engine)
