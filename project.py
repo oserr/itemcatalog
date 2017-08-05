@@ -479,7 +479,7 @@ def get_login():
     '''Renders the form that allows a user to log in.'''
     if get_session_email(SESSION_COOKIE):
         return redirect('/')
-    return render_template('login.html')
+    return render_template('login.html', google_key=CLIENT_ID)
 
 
 @app.route('/login', methods=['POST'])
