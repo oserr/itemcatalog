@@ -256,17 +256,22 @@ def requires_item_owner(err_func):
     return wrapper
 
 
-def get_category_count(cat_name):
+def get_category_count_by_id(cat_id):
+    '''Return the number of items that are part of a given category.'''
+    return session.query(Item).filter(Item.category_id == cat_id).count()
+
+
+def get_category_count_by_name(cat_name):
     '''Return the number of items that are part of a given category.'''
     category = session.query(Category).filter(Category.name == cat_name).first()
     if not category:
         return 0
-    return session.query(Item).filter(Item.category_id == category.id).count()
+    return get_category_count_by_id(category.id)
 
 
-def delete_category(category):
+def delete_category(category_id):
     '''Deletes a category from the database.'''
-    session.query(Category).filter(Category.name == category).delete()
+    session.query(Category).filter(Category.id == category_id).delete()
 
 
 class ItemFields:
@@ -355,7 +360,7 @@ def get_item_fields(data, create_mode=True):
         cat_name = cat_name.lower()
         if cat_name == 'other':
             raise AppErr('New catogory name cannot be other')
-        if get_category_count(cat_name):
+        if get_category_count_by_name(cat_name):
             raise AppErr('Category %s already exist' % cat_name)
     else:
         category = session.query(Category) \
@@ -699,10 +704,10 @@ def delete_item(**kwargs):
     '''
     if request.method == 'GET':
         return render_template('item_delete.html', item=g.item)
-    cat = session.query(Category).get(g.item.category_id).name
+    category_id = g.item.category_id
     session.query(Item).filter(Item.id == g.item.id).delete()
-    if not get_category_count(cat):
-        delete_category(cat)
+    if not get_category_count_by_id(category_id):
+        delete_category(category_id)
     return redirect('/')
 
 
@@ -729,10 +734,10 @@ def json_delete_item(**kwargs):
         - success: True or false, depending on success of operatoin.
         - error: An error message, only present if success is false.
     '''
-    cat = session.query(Category).get(g.item.category_id).name
+    category_id = g.item.category_id
     session.query(Item).filter(Item.id == g.item.id).delete()
-    if not get_category_count(cat):
-        delete_category(cat)
+    if not get_category_count_by_id(category_id):
+        delete_category(category_id)
     return jsonify(SUCCESS_JSON)
 
 
