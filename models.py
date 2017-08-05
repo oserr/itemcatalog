@@ -32,7 +32,7 @@ class Item(Base):
     name = Column(String(50), nullable=False)
     description = Column(String(400), nullable=False)
     category_id = Column(Integer, ForeignKey('category.id'))
-    user_email = Column(String(75), ForeignKey('user.email'))
+    user_email = Column(String(75), ForeignKey('user_acct.email'))
 
     def to_dict(self):
         '''Return this Item in dictionary format.'''
