@@ -389,6 +389,7 @@ session = DBSession()
 
 # Create the Flask application
 app = Flask(__name__, static_url_path='')
+app.secret_key = 'super_secret_key'
 
 # Global variables/definitions
 SESSION_COOKIE='email'
@@ -749,6 +750,5 @@ def json_delete_item(**kwargs):
 
 
 if __name__ == '__main__':
-    app.secret_key = 'super_secret_key'
     app.debug = True
     app.run(host='0.0.0.0', port=5000)
